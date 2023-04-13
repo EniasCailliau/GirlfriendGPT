@@ -1,0 +1,43 @@
+{
+	"type": "package",
+	"handle": "gym-bro-ai",
+	"version": "0.0.43",
+	"description": "A package that allows quick creation of a Telegram bot hosted on Steamship.",
+	"author": "Enias",
+	"entrypoint": "Unused",
+	"public": false,
+	"plugin": null,
+	"build_config": {
+		"ignore": [
+			"tests",
+			"examples"
+		]
+	},
+	"configTemplate": {
+		"bot_token": {
+			"type": "string",
+			"description": "The secret token for your Telegram bot",
+			"default": null
+		}
+	},
+	"steamshipRegistry": {
+		"tagline": "Create your own Telegram Gym Buddy to get the physique you want.",
+		"tagline2": null,
+		"usefulFor": null,
+		"videoUrl": null,
+		"githubUrl": null,
+		"demoUrl": null,
+		"blogUrl": null,
+		"jupyterUrl": null,
+		"authorGithub": "",
+		"authorName": "Enias",
+		"authorEmail": null,
+		"authorTwitter": null,
+		"authorUrl": null,
+		"tags": [
+			"Telegram",
+			"bot",
+			"GPT"
+		]
+	}
+}

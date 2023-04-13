@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools", "setuptools_scm"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+# See configuration details in https://github.com/pypa/setuptools_scm
+version_scheme = "no-guess-dev"
+
+# https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-via-a-file
+[tool.black]
+line-length = 100
+
+# https://pycqa.github.io/isort/docs/configuration/profiles/
+[tool.isort]
+known_first_party = "tests"
+line_length = 100
+profile = "black"
+
+# https://mypy.readthedocs.io/en/latest/config_file.html
+[tool.mypy]
+junit_xml = "reports/mypy.xml"
+plugins = "pydantic.mypy"
+strict = true
+disallow_subclassing_any = false
+disallow_untyped_decorators = false
+ignore_missing_imports = true
+pretty = true
+show_column_numbers = true
+show_error_codes = true
+show_error_context = true
+warn_unreachable = true
+
+# https://pydantic-docs.helpmanual.io/mypy_plugin/#configuring-the-plugin
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
+warn_untyped_fields = true
+
+# http://www.pydocstyle.org/en/latest/usage.html#configuration-files
+[tool.pydocstyle]
+convention = "numpy"
+
+# https://docs.pytest.org/en/latest/customize.html#adding-default-options
+[tool.pytest.ini_options]
+# TODO (enias) add back strict -W error
+addopts = "-W ignore::DeprecationWarning --doctest-modules --verbosity=2"
+junit_family = "xunit2"
+testpaths = "tests"
+python_functions = "test_*"
+minversion = 7.0

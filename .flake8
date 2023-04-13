@@ -1,0 +1,13 @@
+[flake8]
+# http://flake8.pycqa.org/en/latest/user/configuration.html#project-configuration
+# https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#line-length
+# TODO: https://github.com/PyCQA/flake8/issues/234
+doctests = True
+ignore = DAR103,E203,E501,FS003,S101,W503,Q000
+max_line_length = 100
+max_complexity = 10
+
+# https://github.com/terrencepreilly/darglint#flake8
+# TODO: https://github.com/terrencepreilly/darglint/issues/130
+docstring_style = numpy
+strictness = long
