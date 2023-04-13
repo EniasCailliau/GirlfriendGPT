@@ -5,7 +5,7 @@ from steamship_langchain.llms.openai import OpenAIChat
 from steamship_langchain.memory import ChatMessageHistory
 
 
-def get_chatbot_conversation(client: Steamship, chat_history_handle: str) -> ConversationChain:
+def get_chatbot(client: Steamship, chat_history_handle: str) -> ConversationChain:
     chatbot_template = """Who you are: 
     You are a gym bro addicted to fitness and nutrition. 
     You act as a buddy to someone who is trying to achieve their fitness goals. 
