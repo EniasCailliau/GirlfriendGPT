@@ -1,9 +1,9 @@
 {
 	"type": "package",
-	"handle": "gym-bro-ai",
-	"version": "0.0.43",
-	"description": "A package that allows quick creation of a Telegram bot hosted on Steamship.",
-	"author": "Enias",
+	"handle": "",
+	"version": "0.0.1",
+	"description": "Deploy your LangChain chatbots to Telegram.",
+	"author": "",
 	"entrypoint": "Unused",
 	"public": false,
 	"plugin": null,
@@ -13,15 +13,9 @@
 			"examples"
 		]
 	},
-	"configTemplate": {
-		"bot_token": {
-			"type": "string",
-			"description": "The secret token for your Telegram bot",
-			"default": null
-		}
-	},
+	"configTemplate": {},
 	"steamshipRegistry": {
-		"tagline": "Create your own Telegram Gym Buddy to get the physique you want.",
+		"tagline": "Create your own Telegram Buddy with Langchain and Steamship.",
 		"tagline2": null,
 		"usefulFor": null,
 		"videoUrl": null,
@@ -29,14 +23,14 @@
 		"demoUrl": null,
 		"blogUrl": null,
 		"jupyterUrl": null,
-		"authorGithub": "",
-		"authorName": "Enias",
+		"authorGithub": null,
+		"authorName": null,
 		"authorEmail": null,
 		"authorTwitter": null,
 		"authorUrl": null,
 		"tags": [
 			"Telegram",
-			"bot",
+			"LangChain",
 			"GPT"
 		]
 	}

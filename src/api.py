@@ -1,11 +1,9 @@
 """Scaffolding to host your LangChain Chatbot on Steamship and connect it to Telegram."""
 
 import requests
-from steamship.invocable import post, PackageService
+from steamship.invocable import PackageService, post
 
-from chatbot import get_chatbot
-
-BOT_TOKEN = "YOUR_BOT_TOKEN"
+from chatbot import BOT_TOKEN, get_chatbot
 
 
 class LangChainTelegramChatbot(PackageService):
@@ -13,14 +11,21 @@ class LangChainTelegramChatbot(PackageService):
 
     def instance_init(self) -> None:
         """Connect the instance to telegram."""
-        webhook_url = f"{self.context.invocable_url}respond"
+        # Unlink the previous instance
+        requests.get(f"https://api.telegram.org/bot{BOT_TOKEN}/deleteWebhook")
+        # Reset the bot
+        requests.get(f"https://api.telegram.org/bot{BOT_TOKEN}/getUpdates")
+        # Connect the new instance
         requests.get(
             f"https://api.telegram.org/bot{BOT_TOKEN}/setWebhook",
-            params={"url": webhook_url, "allowed_updates": ["message"]},
+            params={
+                "url": f"{self.context.invocable_url}respond",
+                "allowed_updates": ["message"],
+            },
         )
 
     @post("respond", public=True)
-    def respond(self, update_id: int, message: dict) -> None:
+    def respond(self, update_id: int, message: dict) -> str:
         """Telegram webhook contract."""
         message_text = message["text"]
         chat_id = message["chat"]["id"]
@@ -34,3 +39,4 @@ class LangChainTelegramChatbot(PackageService):
             f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
             params={"chat_id": chat_id, "text": response},
         )
+        return "ok"

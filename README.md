@@ -10,7 +10,7 @@ Let's go:
 > Step 1: Just copy paste your LangChain conversation LLMChain into `src/chatbot/get_chatbot`
 
 
-> Step 2: Add your telegram bot access token under `BOT_TOKEN` in `src/api.py`. More info [here](docs/register-telegram-bot.md)
+> Step 2: Add your telegram bot access token under `BOT_TOKEN` in `src/chatbot.py`. More info [here](docs/register-telegram-bot.md)
 
 
 > Step 3: Pip install the latest `steamship_langchain`: `pip install --upgrade steamship_langchain`
