@@ -1,5 +1,3 @@
-import uuid
-
 from steamship import Steamship
 from steamship.cli.cli import deploy
 from steamship.data.manifest import Manifest

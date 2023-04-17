@@ -16,4 +16,4 @@ Let's go:
 > Step 3: Pip install the latest `steamship_langchain`: `pip install --upgrade steamship_langchain`
 
 
-> Step 4: Run `python get_instance.py`
+> Step 4: Run `python deploy.py`
