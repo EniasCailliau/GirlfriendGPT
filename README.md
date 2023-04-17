@@ -17,3 +17,9 @@ Let's go:
 
 
 > Step 4: Run `python deploy.py`
+
+
+## Variations 
+
+Examples of this package: 
+* Gym Bro with long-term memory: https://github.com/steamship-packages/langchain-telegram-chatbot/tree/ec/gym-bro
