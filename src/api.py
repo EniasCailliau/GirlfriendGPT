@@ -49,7 +49,7 @@ class LangChainTelegramChatbot(PackageService):
                 return "ok"
 
             if "remind" in message_text:
-                self._send_message(chat_id, "I'm going to remind you in 5 seconds.")
+                self._send_message(chat_id, "Bro, I got you.")
                 self.invoke_later(
                     "send_message",
                     delay_ms=20_000,
