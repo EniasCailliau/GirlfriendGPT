@@ -53,23 +53,3 @@ def get_vectorstore(client: Steamship, chat_id: str):
         index_name=chat_id,
         embedding="text-embedding-ada-002",
     )
-
-
-if __name__ == '__main__':
-    client = Steamship(workspace="banana")
-    convo = get_chatbot(client, "test222222addddsddasdfddddasdfadsdd2sdadsfadsasdfad22fsdfasfadsfdasfdsa32")
-    print("response", convo.predict(input="what's my favorite food?"), "\n----------------")
-    print("response", convo.predict(input="My favorite food is frietjes met stoofvlees"), "\n----------------")
-    print("response", convo.predict(input="what's my favorite food?"),
-          "\n----------------")
-#     print("response", convo.predict(input="What did we say about pizza?"), "\n----------------")
-# print(convo.predict(input="What exercises do I dislike?"))
-# print(convo.predict(input="My name is Enias, what's your name?"))
-# print(convo.predict(input="Whats my favorite food"))
-# print(convo.predict(input="I like pushups and deadlifts"))
-# print(convo.predict(input="I hate jumping jacks and cycling"))
-# print(convo.predict(input="What's my name?"))
-# print(convo.predict(input="what's my favorite sport?"))
-# print(convo.predict(input="What exercises do I dislike?"))
-# print(convo.predict(input="what's my favorite sport?"))
-# print(convo.predict(input="What do you keep in mind when building my the training schedule for next week?"))
