@@ -1,1 +1,1 @@
-steamship_langchain==0.0.19rc0
+steamship_langchain==0.0.19rc1

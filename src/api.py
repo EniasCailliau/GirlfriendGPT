@@ -25,11 +25,16 @@ class LangChainTelegramChatbot(PackageService):
             },
         )
 
-    def send_message(self, chat_id: str, message: str) -> None:
+    def _send_message(self, chat_id: str, message: str) -> None:
         requests.get(
             f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
             params={"chat_id": chat_id, "text": message},
         )
+
+    @post("send_message")
+    def send_message(self, message: str, chat_id: str) -> str:
+        self._send_message(chat_id, message)
+        return "ok"
 
     @post("respond", public=True)
     def respond(self, update_id: int, message: dict) -> str:
@@ -40,12 +45,23 @@ class LangChainTelegramChatbot(PackageService):
             message_id = message["message_id"]
 
             if message_text == "/start":
-                self.send_message(chat_id, "New conversation started.")
+                self._send_message(chat_id, "New conversation started.")
+                return "ok"
+
+            if "remind" in message_text:
+                self._send_message(chat_id, "I'm going to remind you in 5 seconds.")
+                self.invoke_later(
+                    "send_message",
+                    delay_ms=20_000,
+                    arguments={
+                        "message": "Hey, bro. Did you lift today? You know what they say. No curls, no girls. ",
+                        "chat_id": chat_id},
+                )
                 return "ok"
 
             if message_text == "/reset":
                 get_vectorstore(self.client, chat_id).index.reset()
-                self.send_message(chat_id, "Reset conversation.")
+                self._send_message(chat_id, "Reset conversation.")
                 return "ok"
 
             if already_responded(self.client, chat_id, message_id):
@@ -59,9 +75,8 @@ class LangChainTelegramChatbot(PackageService):
             except Exception as e:
                 response = f"Sorry, I failed: {e}"
 
-            self.send_message(chat_id, response)
+            self._send_message(chat_id, response)
             return "ok"
         except Exception as e:
-            self.send_message(chat_id, f"I failed {e}")
+            self._send_message(chat_id, f"I failed {e}")
             return "nok"
-

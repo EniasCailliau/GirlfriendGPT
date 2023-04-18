@@ -4,13 +4,13 @@ from steamship import Tag, Steamship, File
 
 def already_responded(client: Steamship, chat_id: str, message_id: str) -> bool:
     return (
-            len(
-                Tag.query(
-                    client,
-                    tag_filter_query=f'kind "chat_message_id" and name "{chat_id}_{message_id}"',
-                ).tags
-            )
-            > 0
+        len(
+            Tag.query(
+                client,
+                tag_filter_query=f'kind "chat_message_id" and name "{chat_id}_{message_id}"',
+            ).tags
+        )
+        > 0
     )
 
 

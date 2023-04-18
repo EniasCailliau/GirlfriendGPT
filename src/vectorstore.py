@@ -36,7 +36,7 @@ class VectorStoreRetrieverMemory(BaseMemory):
         return self.input_key
 
     def load_memory_variables(
-            self, inputs: Dict[str, Any]
+        self, inputs: Dict[str, Any]
     ) -> Dict[str, Union[List[Document], str]]:
         """Return history buffer."""
         input_key = self._get_prompt_input_key(inputs)
@@ -50,14 +50,15 @@ class VectorStoreRetrieverMemory(BaseMemory):
         return {self.memory_key: result}
 
     def _form_documents(
-            self, inputs: Dict[str, Any], outputs: Dict[str, str]
+        self, inputs: Dict[str, Any], outputs: Dict[str, str]
     ) -> List[Document]:
         """Format context from this conversation to buffer."""
         # Each document should only include the current turn, not the chat history
         filtered_inputs = {k: v for k, v in inputs.items() if k != self.memory_key}
         texts = [
             f"{k}: {v}"
-            for k, v in list(filtered_inputs.items()) + list(outputs.items()) if k != "response"
+            for k, v in list(filtered_inputs.items()) + list(outputs.items())
+            if k != "response"
         ]
         page_content = "\n".join(texts)
         return [Document(page_content=page_content)]
@@ -66,7 +67,7 @@ class VectorStoreRetrieverMemory(BaseMemory):
         """Save context from this conversation to buffer."""
         documents = self._form_documents(inputs, outputs)
 
-        docs = self.retriever.get_relevant_documents(inputs['input'])
+        docs = self.retriever.get_relevant_documents(inputs["input"])
 
         if not docs or docs[0].page_content != f"input: {inputs['input']}":
             print("storing document")
