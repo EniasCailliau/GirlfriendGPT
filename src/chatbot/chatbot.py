@@ -6,7 +6,6 @@ from steamship_langchain.vectorstores import SteamshipVectorStore
 
 from vectorstore import VectorStoreRetrieverMemory
 
-BOT_TOKEN = "YOUR_TOKEN"
 MODEL_NAME = "gpt-3.5-turbo"  # or "gpt-3.5-turbo"
 K = 2
 TEMPERATURE = 0.0
