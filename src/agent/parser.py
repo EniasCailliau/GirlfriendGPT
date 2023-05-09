@@ -44,9 +44,9 @@ class ConvoOutputParser(AgentOutputParser):
         if "```" in cleaned_output:
             cleaned_output, _ = cleaned_output.split("```")
         if cleaned_output.startswith("```json"):
-            cleaned_output = cleaned_output[len("```json") :]
+            cleaned_output = cleaned_output[len("```json"):]
         if cleaned_output.startswith("```"):
-            cleaned_output = cleaned_output[len("```") :]
+            cleaned_output = cleaned_output[len("```"):]
         if cleaned_output.endswith("```"):
             cleaned_output = cleaned_output[: -len("```")]
         cleaned_output = cleaned_output.strip()

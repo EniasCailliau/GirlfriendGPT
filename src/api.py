@@ -4,7 +4,7 @@ import logging
 import requests
 from steamship.invocable import PackageService, post
 
-from agent.agent import get_vectorstore, get_agent
+from agent.get_agent import get_vectorstore, get_agent
 from response_cache import already_responded, record_response
 
 BOT_TOKEN = "YOUR_KEY"
