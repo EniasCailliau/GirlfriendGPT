@@ -1,1 +1,2 @@
-steamship_langchain==0.0.17rc0
+steamship_langchain==0.0.19rc1
+pytimeparse

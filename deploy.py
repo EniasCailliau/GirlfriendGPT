@@ -9,7 +9,7 @@ except SystemExit as err:
 
 manifest = Manifest.load_manifest()
 
-client = Steamship(workspace="your-workspace")
+client = Steamship(workspace="your-gymbro-workspace-agent-new")
 bot = client.use(
     package_handle=manifest.handle,
     version=manifest.version,
