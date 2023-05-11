@@ -9,16 +9,20 @@ except SystemExit as err:
 
 manifest = Manifest.load_manifest()
 
-client = Steamship(workspace="your-gymbro-workspace-agent-new")
+client = Steamship(workspace="your-workspace-test-22244")
+
 bot = client.use(
     package_handle=manifest.handle,
     version=manifest.version,
-    instance_handle=manifest.version.replace(".", "-"),
+    instance_handle=f"{manifest.handle}-{manifest.version.replace('.', '-')}",
+    config={"bot_token": "5629695237:AAFwmYgYRIV1tyPSBEhdYhuQMPVFu_dliAA"},
 )
 
 bot.wait_for_init()
 print(client.config.workspace_handle)
 print(bot.package_version_handle)
 print(
-    f"https://www.steamship.com/workspaces/{client.config.workspace_handle}/packages/{bot.handle}/logs"
+    f"""Chat with your bot here: 
+
+https://www.steamship.com/workspaces/{client.config.workspace_handle}/packages/{bot.handle}"""
 )

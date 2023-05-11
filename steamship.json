@@ -1,7 +1,7 @@
 {
 	"type": "package",
-	"handle": "gymbro",
-	"version": "0.3.0",
+	"handle": "gymbro-bot",
+	"version": "0.3.0-rc.12",
 	"description": "Deploy your LangChain chatbots to Telegram.",
 	"author": "",
 	"entrypoint": "Unused",
@@ -13,7 +13,13 @@
 			"examples"
 		]
 	},
-	"configTemplate": {},
+	"configTemplate": {
+		"bot_token": {
+			"type": "string",
+			"description": "The secret token for your Telegram bot",
+			"default": null
+		}
+	},
 	"steamshipRegistry": {
 		"tagline": "Create your own Telegram Buddy with Langchain and Steamship.",
 		"tagline2": null,

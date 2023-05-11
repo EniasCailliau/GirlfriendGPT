@@ -48,6 +48,11 @@ class RemindMe(Tool):
     invoke_later: Callable
     chat_id: str
 
+    @property
+    def is_single_input(self) -> bool:
+        """Whether the tool only accepts a single input."""
+        return True
+
     def __init__(self, invoke_later: Callable, chat_id: str):
         super().__init__(
             name="REMIND",
@@ -63,6 +68,7 @@ class RemindMe(Tool):
         if isinstance(prompt, dict):
             req = ReminderRequest.parse_obj(prompt)
         elif isinstance(prompt, str):
+            prompt = prompt.replace("'", '"')
             req = ReminderRequest.parse_raw(prompt)
         else:
             return "Tool failure. Could not handle request. Sorry."
