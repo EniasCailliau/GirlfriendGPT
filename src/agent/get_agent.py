@@ -7,6 +7,8 @@ from steamship_langchain.llms.openai import OpenAIChat
 from steamship_langchain.tools import SteamshipSERP
 
 from agent.parser import get_format_instructions, CustomParser
+from agent.tools.image import GenerateImageTool
+from agent.tools.my_tool import MyTool
 from agent.tools.reminder import RemindMe
 
 MODEL_NAME = "gpt-3.5-turbo"  # or "gpt-4.0"
@@ -34,7 +36,9 @@ def get_tools(client: Steamship, invoke_later: Callable, chat_id: str) -> List[T
             name="Search",
             func=search.search,
             description="useful for when you need to answer questions about current events",
-        )
+        ),
+        MyTool(client),
+        GenerateImageTool(client),
     ]
 
 
@@ -53,6 +57,4 @@ def get_agent(client: Steamship, chat_id: str, invoke_later: Callable) -> AgentE
         format_instructions=get_format_instructions(bool(tools)),
         output_parser=CustomParser(),
     )
-    return AgentExecutor.from_agent_and_tools(
-        agent=agent, tools=tools, verbose=VERBOSE
-    )
+    return AgentExecutor.from_agent_and_tools(agent=agent, tools=tools, verbose=VERBOSE)

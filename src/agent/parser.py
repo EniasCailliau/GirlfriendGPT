@@ -1,4 +1,10 @@
+import re
+from typing import Union
+
 from langchain.agents.mrkl.output_parser import MRKLOutputParser
+from langchain.schema import AgentAction, AgentFinish
+
+from agent.utils import UUID_PATTERN
 
 FINAL_ANSWER_ACTION = "Final Answer:"
 
@@ -31,3 +37,13 @@ def get_format_instructions(has_tools=True) -> str:
 class CustomParser(MRKLOutputParser):
     def get_format_instructions(self) -> str:
         return get_format_instructions(True)
+
+    def parse(self, text: str) -> Union[AgentAction, AgentFinish]:
+        if FINAL_ANSWER_ACTION in text:
+            output = text.split(FINAL_ANSWER_ACTION)[-1].strip()
+            output = UUID_PATTERN.split(output)
+            output = [re.sub(r"^\W+", "", el) for el in output]
+
+            return AgentFinish({"output": output}, text)
+        cleaned_output = super().parse(text)
+        return cleaned_output
