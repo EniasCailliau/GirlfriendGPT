@@ -1,8 +1,8 @@
 {
 	"type": "package",
-	"handle": "gymbro-bot",
-	"version": "0.3.0-rc.23",
-	"description": "Deploy your LangChain chatbots to Telegram.",
+	"handle": "",
+	"version": "",
+	"description": "",
 	"author": "",
 	"entrypoint": "Unused",
 	"public": false,
@@ -21,7 +21,7 @@
 		}
 	},
 	"steamshipRegistry": {
-		"tagline": "Create your own Telegram Buddy with Langchain and Steamship.",
+		"tagline": "",
 		"tagline2": null,
 		"usefulFor": null,
 		"videoUrl": null,

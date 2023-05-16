@@ -21,23 +21,16 @@ class LangChainTelegramChatbot(LangChainAgentBot, TelegramBot):
     """Deploy LangChain chatbots and connect them to Telegram."""
 
     def get_agent(self, chat_id: str) -> AgentExecutor:
-        llm = OpenAIChat(client=self.client, model_name=MODEL_NAME,
-                         temperature=TEMPERATURE, verbose=VERBOSE)
+        llm = OpenAIChat(
+            client=self.client,
+            model_name=MODEL_NAME,
+            temperature=TEMPERATURE,
+            verbose=VERBOSE,
+        )
 
         tools = self.get_tools(chat_id=chat_id)
 
-        if self.context and self.context.invocable_instance_handle:
-            my_instance_handle = self.context.invocable_instance_handle
-        else:
-            my_instance_handle = "local-instance-handle"
-
-        memory = ConversationBufferMemory(
-            memory_key="chat_history",
-            chat_memory=ChatMessageHistory(
-                client=self.client, key=f"history-{chat_id}-{my_instance_handle}"
-            ),
-            return_messages=True,
-        )
+        memory = self.get_memory(chat_id)
 
         return initialize_agent(
             tools,
@@ -46,6 +39,20 @@ class LangChainTelegramChatbot(LangChainAgentBot, TelegramBot):
             verbose=True,
             memory=memory,
         )
+
+    def get_memory(self, chat_id):
+        if self.context and self.context.invocable_instance_handle:
+            my_instance_handle = self.context.invocable_instance_handle
+        else:
+            my_instance_handle = "local-instance-handle"
+        memory = ConversationBufferMemory(
+            memory_key="chat_history",
+            chat_memory=ChatMessageHistory(
+                client=self.client, key=f"history-{chat_id}-{my_instance_handle}"
+            ),
+            return_messages=True,
+        )
+        return memory
 
     def get_tools(self, chat_id: str) -> List[Tool]:
         return [
