@@ -1,7 +1,7 @@
 {
 	"type": "package",
 	"handle": "gymbro-bot",
-	"version": "0.3.0-rc.19",
+	"version": "0.3.0-rc.21",
 	"description": "Deploy your LangChain chatbots to Telegram.",
 	"author": "",
 	"entrypoint": "Unused",

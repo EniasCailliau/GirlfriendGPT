@@ -31,27 +31,28 @@ class LangChainTelegramChatbot(LangChainAgentBot):
     """Deploy LangChain chatbots and connect them to Telegram."""
 
     def get_agent(self, chat_id: str) -> AgentExecutor:
-        llm = OpenAIChat(client=self.client,
-                         temperature=TEMPERATURE,
-                         verbose=True)
+        llm = OpenAIChat(client=self.client, temperature=TEMPERATURE, verbose=True)
 
         tools = self.get_tools(chat_id=chat_id)
 
         my_instance_handle = "local-also-remind-me-will-not-work"
 
-        memory = ConversationBufferMemory(memory_key="chat_history",
-                                          chat_memory=ChatMessageHistory(
-                                              client=self.client,
-                                              key=f"history-{chat_id}-{my_instance_handle}"
-                                          ),
-                                          return_messages=True)
+        memory = ConversationBufferMemory(
+            memory_key="chat_history",
+            chat_memory=ChatMessageHistory(
+                client=self.client, key=f"history-{chat_id}-{my_instance_handle}"
+            ),
+            return_messages=True,
+        )
 
-        return initialize_agent(tools,
-                                llm,
-                                agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION,
-                                verbose=True,
-                                # agent_kwargs={"output_parser":MultiModalParser()},
-                                memory=memory)
+        return initialize_agent(
+            tools,
+            llm,
+            agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION,
+            verbose=True,
+            # agent_kwargs={"output_parser":MultiModalParser()},
+            memory=memory,
+        )
 
     def get_tools(self, chat_id: str) -> List[Tool]:
         return [
@@ -59,5 +60,5 @@ class LangChainTelegramChatbot(LangChainAgentBot):
             # MyTool(self.client),
             GenerateImageTool(self.client),
             # GenerateAlbumArtTool(self.client)
-            RemindMe(invoke_later=self.invoke_later, chat_id=chat_id)
+            RemindMe(invoke_later=self.invoke_later, chat_id=chat_id),
         ]

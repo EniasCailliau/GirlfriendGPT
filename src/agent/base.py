@@ -13,7 +13,6 @@ from agent.utils import is_valid_uuid, make_image_public, UUID_PATTERN
 
 
 class LangChainAgentBot(TelegramBot):
-
     @abstractmethod
     def get_agent(self, chat_id: str) -> AgentExecutor:
         raise NotImplementedError()
@@ -40,7 +39,7 @@ class LangChainAgentBot(TelegramBot):
         )
 
     def create_response(
-            self, incoming_message: ChatMessage
+        self, incoming_message: ChatMessage
     ) -> Optional[List[ChatMessage]]:
         """Use the LLM to prepare the next response by appending the user input to the file and then generating."""
         if incoming_message.text == "/start":
@@ -62,7 +61,7 @@ class LangChainAgentBot(TelegramBot):
         )
 
     def agent_output_to_chat_messages(
-            self, chat_id: str, agent_output: List[str]
+        self, chat_id: str, agent_output: List[str]
     ) -> List[ChatMessage]:
         """Transform the output of the Multi-Modal Agent into a list of ChatMessage objects.
 
