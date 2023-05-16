@@ -3,6 +3,7 @@ from typing import List
 
 from langchain.agents import Tool, initialize_agent, AgentType, AgentExecutor
 from langchain.memory import ConversationBufferMemory
+from steamship.experimental.package_starters.telegram_bot import TelegramBot
 from steamship_langchain.llms import OpenAIChat
 from steamship_langchain.memory import ChatMessageHistory
 
@@ -27,7 +28,7 @@ You engage in casual conversations but always try to direct the conversation bac
 """
 
 
-class LangChainTelegramChatbot(LangChainAgentBot):
+class LangChainTelegramChatbot(LangChainAgentBot, TelegramBot):
     """Deploy LangChain chatbots and connect them to Telegram."""
 
     def get_agent(self, chat_id: str) -> AgentExecutor:
@@ -50,7 +51,6 @@ class LangChainTelegramChatbot(LangChainAgentBot):
             llm,
             agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION,
             verbose=True,
-            # agent_kwargs={"output_parser":MultiModalParser()},
             memory=memory,
         )
 

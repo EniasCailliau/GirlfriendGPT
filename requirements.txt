@@ -1,4 +1,4 @@
-steamship_langchain==0.0.20rc2
+steamship_langchain==0.0.21
 pytimeparse
-steamship==2.16.10rc1
 termcolor
+steamship==2.16.10rc1
