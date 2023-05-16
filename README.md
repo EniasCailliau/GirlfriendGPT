@@ -1,6 +1,6 @@
 # Multi-Modal LangChain agents in Production
 
-This started projects contains the necessary scaffolding to deploy LangChain Agents with memory and connect them to Telegram.
+This starter project contains the necessary scaffolding to deploy LangChain Agents with memory and connect them to Telegram.
 
 ## 🚀 Features
 
