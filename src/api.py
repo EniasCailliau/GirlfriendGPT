@@ -2,13 +2,16 @@
 from typing import List
 
 from langchain.agents import Tool, initialize_agent, AgentType, AgentExecutor
+from langchain.agents.conversational_chat.output_parser import ConvoOutputParser
 from langchain.memory import ConversationBufferMemory
 from steamship.experimental.package_starters.telegram_bot import TelegramBot
 from steamship_langchain.llms import OpenAIChat
 from steamship_langchain.memory import ChatMessageHistory
 
 from agent.base import LangChainAgentBot
+from agent.parser import MultiModalOutputParser
 from agent.tools.image import GenerateImageTool
+from agent.tools.my_tool import MyTool
 from agent.tools.reminder import RemindMe
 from agent.tools.search import SearchTool
 
@@ -36,6 +39,7 @@ class LangChainTelegramChatbot(LangChainAgentBot, TelegramBot):
             tools,
             llm,
             agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION,
+            agent_kwargs={"output_parser": MultiModalOutputParser(ConvoOutputParser())},
             verbose=True,
             memory=memory,
         )
@@ -56,9 +60,9 @@ class LangChainTelegramChatbot(LangChainAgentBot, TelegramBot):
 
     def get_tools(self, chat_id: str) -> List[Tool]:
         return [
-            SearchTool(self.client),
+            # SearchTool(self.client),
             # MyTool(self.client),
             GenerateImageTool(self.client),
             # GenerateAlbumArtTool(self.client)
-            RemindMe(invoke_later=self.invoke_later, chat_id=chat_id),
+            # RemindMe(invoke_later=self.invoke_later, chat_id=chat_id),
         ]
