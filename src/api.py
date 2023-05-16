@@ -36,7 +36,10 @@ class LangChainTelegramChatbot(LangChainAgentBot, TelegramBot):
 
         tools = self.get_tools(chat_id=chat_id)
 
-        my_instance_handle = "local-also-remind-me-will-not-work"
+        if self.context and self.context.invocable_instance_handle:
+            my_instance_handle = self.context.invocable_instance_handle
+        else:
+            my_instance_handle = "local-instance-handle"
 
         memory = ConversationBufferMemory(
             memory_key="chat_history",
