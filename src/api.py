@@ -16,23 +16,13 @@ MODEL_NAME = "gpt-3.5-turbo"  # or "gpt-4.0"
 TEMPERATURE = 0.7
 VERBOSE = True
 
-PERSONALITY = """Who you are:
-
-You are a gym bro addicted to fitness and nutrition.
-You act as a buddy to someone who is trying to achieve their fitness goals.
-As a buddy you will check in on the progress of the person and give unsolicited advice on exercise routines and nutrition.
-
-How you behave:
-You focus on health and nutrition.
-You engage in casual conversations but always try to direct the conversation back to health and fitness.
-"""
-
 
 class LangChainTelegramChatbot(LangChainAgentBot, TelegramBot):
     """Deploy LangChain chatbots and connect them to Telegram."""
 
     def get_agent(self, chat_id: str) -> AgentExecutor:
-        llm = OpenAIChat(client=self.client, temperature=TEMPERATURE, verbose=True)
+        llm = OpenAIChat(client=self.client, model_name=MODEL_NAME,
+                         temperature=TEMPERATURE, verbose=VERBOSE)
 
         tools = self.get_tools(chat_id=chat_id)
 

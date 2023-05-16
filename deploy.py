@@ -9,13 +9,13 @@ except SystemExit as err:
 
 manifest = Manifest.load_manifest()
 
-client = Steamship(workspace="your-workspace-test-22244")
+client = Steamship(workspace="your-workspace")
 
 bot = client.use(
     package_handle=manifest.handle,
     version=manifest.version,
     instance_handle=f"{manifest.handle}-{manifest.version.replace('.', '-')}",
-    config={"bot_token": "6140681319:AAFqNDOs68qROhCxUO8qOhR8V0IEr5k5vb8"},
+    config={"bot_token": input("bot_token: ")},
 )
 
 bot.wait_for_init()
