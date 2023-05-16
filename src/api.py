@@ -1,92 +1,63 @@
 """Scaffolding to host your LangChain Chatbot on Steamship and connect it to Telegram."""
-from typing import List, Optional
+from typing import List
 
-from steamship import Steamship, Block
-from steamship.experimental.package_starters.telegram_bot import TelegramBot
-from steamship.experimental.transports.chat import ChatMessage
-from steamship.invocable import post
+from langchain.agents import Tool, initialize_agent, AgentType, AgentExecutor
+from langchain.memory import ConversationBufferMemory
+from steamship_langchain.llms import OpenAIChat
+from steamship_langchain.memory import ChatMessageHistory
 
-from agent.get_agent import get_agent
-from agent.utils import is_valid_uuid, make_image_public
+from agent.base import LangChainAgentBot
+from agent.tools.image import GenerateImageTool
+from agent.tools.reminder import RemindMe
+from agent.tools.search import SearchTool
+
+MODEL_NAME = "gpt-3.5-turbo"  # or "gpt-4.0"
+TEMPERATURE = 0.7
+VERBOSE = True
+
+PERSONALITY = """Who you are:
+
+You are a gym bro addicted to fitness and nutrition.
+You act as a buddy to someone who is trying to achieve their fitness goals.
+As a buddy you will check in on the progress of the person and give unsolicited advice on exercise routines and nutrition.
+
+How you behave:
+You focus on health and nutrition.
+You engage in casual conversations but always try to direct the conversation back to health and fitness.
+"""
 
 
-class LangChainTelegramChatbot(TelegramBot):
+class LangChainTelegramChatbot(LangChainAgentBot):
     """Deploy LangChain chatbots and connect them to Telegram."""
 
-    @post("send_message")
-    def send_message(self, message: str, chat_id: str) -> str:
-        self.telegram_transport.send([ChatMessage(text=message, chat_id=chat_id)])
-        return "ok"
+    def get_agent(self, chat_id: str) -> AgentExecutor:
+        llm = OpenAIChat(client=self.client,
+                         temperature=TEMPERATURE,
+                         verbose=True)
 
-    def _invoke_later(self, delay_ms: int, message: str, chat_id: str):
-        self.invoke_later(
-            "send_message",
-            delay_ms=delay_ms,
-            arguments={
-                "message": message,
-                "chat_id": chat_id,
-            },
-        )
+        tools = self.get_tools(chat_id=chat_id)
 
-    def create_response(
-        self, incoming_message: ChatMessage
-    ) -> Optional[List[ChatMessage]]:
-        """Use the LLM to prepare the next response by appending the user input to the file and then generating."""
-        if incoming_message.text == "/start":
-            return [
-                ChatMessage(
-                    text="New conversation started.",
-                    chat_id=incoming_message.get_chat_id(),
-                )
-            ]
+        my_instance_handle = "local-also-remind-me-will-not-work"
 
-        conversation = get_agent(
-            self.client,
-            chat_id=incoming_message.get_chat_id(),
-            invoke_later=self._invoke_later,
-        )
-        response = conversation.run(input=incoming_message.text)
+        memory = ConversationBufferMemory(memory_key="chat_history",
+                                          chat_memory=ChatMessageHistory(
+                                              client=self.client,
+                                              key=f"history-{chat_id}-{my_instance_handle}"
+                                          ),
+                                          return_messages=True)
 
-        return self.agent_output_to_chat_messages(
-            chat_id=incoming_message.get_chat_id(), agent_output=response
-        )
+        return initialize_agent(tools,
+                                llm,
+                                agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION,
+                                verbose=True,
+                                # agent_kwargs={"output_parser":MultiModalParser()},
+                                memory=memory)
 
-    def agent_output_to_chat_messages(
-        self, chat_id: str, agent_output: List[str]
-    ) -> List[ChatMessage]:
-        """Transform the output of the Multi-Modal Agent into a list of ChatMessage objects.
-
-        The response of a ulti-Modal Agent contains one or more:
-        - parseable UUIDs, representing a block containing binary data, or:
-        - Text
-
-        This method inspects each string and creates a ChatMessage of the appropriate type.
-        """
-        ret = []
-        for part_response in agent_output:
-            if is_valid_uuid(part_response):
-                block = Block.get(self.client, _id=part_response)
-                message = ChatMessage.from_block(
-                    block,
-                    chat_id=chat_id,
-                )
-                message.url = make_image_public(self.client, block)
-
-            else:
-                message = ChatMessage(
-                    client=self.client,
-                    chat_id=chat_id,
-                    text=part_response,
-                )
-
-            ret.append(message)
-        return ret
-
-
-if __name__ == "__main__":
-    client = Steamship()
-    bot = LangChainTelegramChatbot(client=client, config={"bot_token": "test"})
-    answer = bot.create_response(
-        ChatMessage(text="Hi bro, generate me an image of a cat", chat_id="2")
-    )
-    print("answer", answer)
+    def get_tools(self, chat_id: str) -> List[Tool]:
+        return [
+            SearchTool(self.client),
+            # MyTool(self.client),
+            GenerateImageTool(self.client),
+            # GenerateAlbumArtTool(self.client)
+            RemindMe(invoke_later=self.invoke_later, chat_id=chat_id)
+        ]

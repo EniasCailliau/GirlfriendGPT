@@ -15,7 +15,7 @@ bot = client.use(
     package_handle=manifest.handle,
     version=manifest.version,
     instance_handle=f"{manifest.handle}-{manifest.version.replace('.', '-')}",
-    config={"bot_token": "5629695237:AAFwmYgYRIV1tyPSBEhdYhuQMPVFu_dliAA"},
+    config={"bot_token": "6140681319:AAFqNDOs68qROhCxUO8qOhR8V0IEr5k5vb8"},
 )
 
 bot.wait_for_init()
