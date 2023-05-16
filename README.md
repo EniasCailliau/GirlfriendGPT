@@ -1,6 +1,12 @@
 # Multi-Modal LangChain agents in Production
 
-This project contains the necessary scaffolding to deploy LangChain conversation agents with memory and connect them to Telegram.
+This started projects contains the necessary scaffolding to deploy LangChain Agents with memory and connect them to Telegram.
+
+## 🚀 Features
+
+- 🧠 Support for OpenAI GPT-4 and Google PaLM
+- 🔗 Embeddable chat window
+- 🔌 Connect your chatbot to Telegram
 
 ## Usage 🛠️
 
