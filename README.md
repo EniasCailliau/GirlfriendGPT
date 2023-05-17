@@ -3,7 +3,12 @@
 
 This starter project contains the necessary scaffolding to deploy LangChain Agents with memory and connect them to Telegram.
 
+
+Get started:
 https:///status/1658544730324492303
+
+Add/Edit voice: 
+https:///status/1658841969211088905
 
 ## 🚀 Features
 
