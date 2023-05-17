@@ -15,7 +15,7 @@ from api import LangChainTelegramChatbot
 def show_results(response_messages: List[ChatMessage]):
     print(colored("\nResults: ", "blue", attrs=["bold"]))
     for message in response_messages:
-        if message.mime_type and message.mime_type.startswith("image"):
+        if message.mime_type:
             print(message.url, end="\n\n")
         else:
             print(message.text, end="\n\n")

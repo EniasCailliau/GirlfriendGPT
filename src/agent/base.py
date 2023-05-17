@@ -4,18 +4,22 @@ from abc import abstractmethod
 from typing import List, Optional
 
 from langchain.agents import AgentExecutor
+from langchain.tools import Tool
 from steamship import Block
 from steamship.experimental.package_starters.telegram_bot import TelegramBot
 from steamship.experimental.transports.chat import ChatMessage
 from steamship.invocable import post
 
-from agent.utils import is_valid_uuid, make_image_public, UUID_PATTERN
+from agent.utils import is_valid_uuid, make_block_public, UUID_PATTERN
 
 
 class LangChainAgentBot(TelegramBot):
     @abstractmethod
     def get_agent(self, chat_id: str) -> AgentExecutor:
         raise NotImplementedError()
+
+    def audio_tool(self) -> Optional[Tool]:
+        return None
 
     def is_verbose_logging_enabled(self):
         return True
@@ -56,8 +60,18 @@ class LangChainAgentBot(TelegramBot):
         response = conversation.run(input=incoming_message.text)
         response = UUID_PATTERN.split(response)
         response = [re.sub(r"^\W+", "", el) for el in response]
+        if audio_tool := self.audio_tool():
+            response_messages = []
+            for message in response:
+                response_messages.append(message)
+                if not is_valid_uuid(message):
+                    audio_uuid = audio_tool.run(message)
+                    response_messages.append(audio_uuid)
+        else:
+            response_messages = response
+
         return self.agent_output_to_chat_messages(
-            chat_id=incoming_message.get_chat_id(), agent_output=response
+            chat_id=incoming_message.get_chat_id(), agent_output=response_messages
         )
 
     def agent_output_to_chat_messages(
@@ -79,7 +93,7 @@ class LangChainAgentBot(TelegramBot):
                     block,
                     chat_id=chat_id,
                 )
-                message.url = make_image_public(self.client, block)
+                message.url = make_block_public(self.client, block)
 
             else:
                 message = ChatMessage(

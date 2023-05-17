@@ -12,7 +12,7 @@ class MultiModalOutputParser(AgentOutputParser):
     parser: AgentOutputParser
 
     def __init__(self, parser, **data: Any):
-        super().__init__(**data,parser = parser)
+        super().__init__(**data, parser=parser)
 
     def get_format_instructions(self) -> str:
         return FORMAT_INSTRUCTIONS
@@ -21,7 +21,7 @@ class MultiModalOutputParser(AgentOutputParser):
         cleaned_output = text.strip()
 
         if cleaned_output.startswith("AI: "):
-            cleaned_output = cleaned_output[len("AI: "):]
+            cleaned_output = cleaned_output[len("AI: ") :]
 
         return self.parser.parse(cleaned_output)
 

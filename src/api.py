@@ -1,5 +1,5 @@
 """Scaffolding to host your LangChain Chatbot on Steamship and connect it to Telegram."""
-from typing import List
+from typing import List, Optional
 
 from langchain.agents import Tool, initialize_agent, AgentType, AgentExecutor
 from langchain.agents.conversational_chat.output_parser import ConvoOutputParser
@@ -12,8 +12,7 @@ from agent.base import LangChainAgentBot
 from agent.parser import MultiModalOutputParser
 from agent.tools.image import GenerateImageTool
 from agent.tools.my_tool import MyTool
-from agent.tools.reminder import RemindMe
-from agent.tools.search import SearchTool
+from agent.tools.speech import GenerateSpeechTool
 
 MODEL_NAME = "gpt-3.5-turbo"  # or "gpt-4.0"
 TEMPERATURE = 0.7
@@ -44,6 +43,10 @@ class LangChainTelegramChatbot(LangChainAgentBot, TelegramBot):
             memory=memory,
         )
 
+    def audio_tool(self) -> Optional[Tool]:
+        """Return tool to generate spoken version of output text."""
+        return GenerateSpeechTool(self.client)
+
     def get_memory(self, chat_id):
         if self.context and self.context.invocable_instance_handle:
             my_instance_handle = self.context.invocable_instance_handle
@@ -61,7 +64,7 @@ class LangChainTelegramChatbot(LangChainAgentBot, TelegramBot):
     def get_tools(self, chat_id: str) -> List[Tool]:
         return [
             # SearchTool(self.client),
-            # MyTool(self.client),
+            MyTool(self.client),
             GenerateImageTool(self.client),
             # GenerateAlbumArtTool(self.client)
             # RemindMe(invoke_later=self.invoke_later, chat_id=chat_id),

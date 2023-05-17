@@ -20,7 +20,7 @@ def is_valid_uuid(uuid_to_test: str, version=4) -> bool:
     return str(uuid_obj) == lowered
 
 
-def make_image_public(client, block):
+def make_block_public(client, block):
     filepath = str(uuid.uuid4())
     signed_url = (
         client.get_workspace()
