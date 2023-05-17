@@ -18,7 +18,7 @@ class LangChainAgentBot(TelegramBot):
     def get_agent(self, chat_id: str) -> AgentExecutor:
         raise NotImplementedError()
 
-    def audio_tool(self) -> Optional[Tool]:
+    def voice_tool(self) -> Optional[Tool]:
         return None
 
     def is_verbose_logging_enabled(self):
@@ -60,7 +60,7 @@ class LangChainAgentBot(TelegramBot):
         response = conversation.run(input=incoming_message.text)
         response = UUID_PATTERN.split(response)
         response = [re.sub(r"^\W+", "", el) for el in response]
-        if audio_tool := self.audio_tool():
+        if audio_tool := self.voice_tool():
             response_messages = []
             for message in response:
                 response_messages.append(message)
