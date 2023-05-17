@@ -3,6 +3,8 @@
 
 This starter project contains the necessary scaffolding to deploy LangChain Agents with memory and connect them to Telegram.
 
+https:///status/1658544730324492303
+
 ## 🚀 Features
 
 - 🧠 Support for OpenAI GPT-4 and Google PaLM
