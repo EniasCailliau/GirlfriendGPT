@@ -10,6 +10,7 @@ https:///status/1658544730324492303
 - 🧠 Support for OpenAI GPT-4 and Google PaLM
 - 🔗 Embeddable chat window
 - 🔌 Connect your chatbot to Telegram
+- 🔈 Give your Agent a voice
 
 ## Usage 🛠️
 
