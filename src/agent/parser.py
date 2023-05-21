@@ -4,8 +4,9 @@ import json
 from typing import Union, Any
 
 from langchain.agents import AgentOutputParser
-from langchain.agents.conversational_chat.prompt import FORMAT_INSTRUCTIONS
 from langchain.schema import AgentAction, AgentFinish
+
+from prompts import FORMAT_INSTRUCTIONS
 
 
 class MultiModalOutputParser(AgentOutputParser):

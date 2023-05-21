@@ -12,14 +12,16 @@ from steamship_langchain.memory import ChatMessageHistory
 
 from agent.base import LangChainAgentBot
 from agent.parser import MultiModalOutputParser
+from agent.tools.search import SearchTool
 from agent.tools.selfie import SelfieTool
 from agent.tools.speech import GenerateSpeechTool
-from prompts import PERSONALITY, SUFFIX
+from prompts import PERSONALITY, SUFFIX, FORMAT_INSTRUCTIONS
 
-MODEL_NAME = "gpt-4"  # or "gpt-4.0"
-TEMPERATURE = 0.5
+MODEL_NAME = "gpt-4"  # or "gpt-4"
+TEMPERATURE = 0.7
 VERBOSE = True
-
+import langchain
+langchain.cache = None
 
 class GirlFriendAIConfig(TelegramBotConfig):
     elevenlabs_api_key: str = Field(default="", description="Optional API KEY for ElevenLabs Voice Bot")
@@ -50,18 +52,20 @@ class LangChainTelegramChatbot(LangChainAgentBot, TelegramBot):
         return initialize_agent(
             tools,
             llm,
-            agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION,
+            agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION,
             agent_kwargs={
-                "output_parser": MultiModalOutputParser(ConvoOutputParser()),
-                "system_message": PERSONALITY,
-                "human_message": SUFFIX,
+                # "output_parser": MultiModalOutputParser(ConvoOutputParser()),
+                "prefix": PERSONALITY,
+                "suffix": SUFFIX,
+                "format_instructions": FORMAT_INSTRUCTIONS,
             },
-            verbose=True,
+            verbose=VERBOSE,
             memory=memory,
         )
 
     def voice_tool(self) -> Optional[Tool]:
         """Return tool to generate spoken version of output text."""
+        # return None
         return GenerateSpeechTool(
             client=self.client, voice_id=self.config.elevenlabs_voice_id,
             elevenlabs_api_key=self.config.elevenlabs_api_key
@@ -83,10 +87,10 @@ class LangChainTelegramChatbot(LangChainAgentBot, TelegramBot):
 
     def get_tools(self, chat_id: str) -> List[Tool]:
         return [
-            # SearchTool(self.client),
+            SearchTool(self.client),
             # MyTool(self.client),
             # GenerateImageTool(self.client),
             # GenerateAlbumArtTool(self.client)
             # RemindMe(invoke_later=self.invoke_later, chat_id=chat_id),
-            # SelfieTool(self.client)
+            SelfieTool(self.client)
         ]
