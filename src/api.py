@@ -10,9 +10,7 @@ from steamship_langchain.memory import ChatMessageHistory
 
 from agent.base import LangChainAgentBot
 from agent.parser import MultiModalOutputParser
-from agent.tools.image import GenerateImageTool
-from agent.tools.my_tool import MyTool
-from agent.tools.speech import GenerateSpeechTool
+from prompts import PERSONALITY, SUFFIX
 
 MODEL_NAME = "gpt-3.5-turbo"  # or "gpt-4.0"
 TEMPERATURE = 0.7
@@ -38,7 +36,11 @@ class LangChainTelegramChatbot(LangChainAgentBot, TelegramBot):
             tools,
             llm,
             agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION,
-            agent_kwargs={"output_parser": MultiModalOutputParser(ConvoOutputParser())},
+            agent_kwargs={
+                "output_parser": MultiModalOutputParser(ConvoOutputParser()),
+                "system_message": PERSONALITY,
+                "human_message": SUFFIX,
+            },
             verbose=True,
             memory=memory,
         )
