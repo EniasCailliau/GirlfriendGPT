@@ -21,7 +21,8 @@ def is_valid_uuid(uuid_to_test: str, version=4) -> bool:
 
 
 def make_block_public(client, block):
-    filepath = str(uuid.uuid4())
+    extension = block.mime_type.split("/")[1]
+    filepath = f"{uuid.uuid4()}.{extension}"
     signed_url = (
         client.get_workspace()
         .create_signed_url(

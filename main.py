@@ -1,4 +1,5 @@
 import logging
+import os
 import sys
 
 sys.path.insert(0, "src")
@@ -37,7 +38,12 @@ def main():
     with Steamship.temporary_workspace() as client:
         run = partial(
             run_agent,
-            agent=LangChainTelegramChatbot(client=client, config={"bot_token": "test"}),
+            agent=LangChainTelegramChatbot(client=client,
+                                           config={"bot_token": "test",
+                                                   "elevenlabs_voice_id": os.environ.get(
+                                                       "ELEVENLABS_VOICE_ID"),
+                                                   "elevenlabs_api_key": os.environ.get(
+                                                       "ELEVENLABS_API_KEY")}),
         )
         print(f"Starting Agent...")
 
