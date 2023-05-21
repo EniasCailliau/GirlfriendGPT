@@ -45,9 +45,7 @@ class LangChainTelegramChatbot(LangChainAgentBot, TelegramBot):
 
     def voice_tool(self) -> Optional[Tool]:
         """Return tool to generate spoken version of output text."""
-        return GenerateSpeechTool(
-            client=self.client, voice_id="", elevenlabs_api_key=""
-        )
+        return None
 
     def get_memory(self, chat_id):
         if self.context and self.context.invocable_instance_handle:
@@ -66,8 +64,8 @@ class LangChainTelegramChatbot(LangChainAgentBot, TelegramBot):
     def get_tools(self, chat_id: str) -> List[Tool]:
         return [
             # SearchTool(self.client),
-            MyTool(self.client),
-            GenerateImageTool(self.client),
+            # MyTool(self.client),
+            # GenerateImageTool(self.client),
             # GenerateAlbumArtTool(self.client)
             # RemindMe(invoke_later=self.invoke_later, chat_id=chat_id),
         ]
