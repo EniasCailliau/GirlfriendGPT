@@ -7,7 +7,7 @@ Click the image below for a demo:
 
 [![Demo Video](http://img.youtube.com/vi/LiN3D1QZGQw/0.jpg)](http://www.youtube.com/watch?v=LiN3D1QZGQw "Video Title")
 
-## Subscrine to updates here: https://
+## Subscribe to updates here: https://
 
 ## Features
 
