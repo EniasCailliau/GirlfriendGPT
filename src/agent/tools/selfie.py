@@ -43,11 +43,16 @@ class SelfieTool(Tool):
         # if not isinstance(prompt, str):
         #     prompt = json.dumps(prompt)
 
-        prompt = ("A selfie of a futuristic, human-like robot looking seductive into the lens of her phone"
-                  "detailed clothing, hyperrealistic, fantasy, surrealist, highly detailed, sharp focus, sci-fi, "
-                  "stunningly beautiful, dystopian, cinematic lighting, dark, 4K, dramatic lighting")
-        task = image_generator.generate(text=prompt, append_output_to_file=True,
-                                        options={"negative_prompt": NEGATIVE_PROMPT}, )
+        prompt = (
+            "A selfie of a futuristic, human-like robot looking seductive into the lens of her phone"
+            "detailed clothing, hyperrealistic, fantasy, surrealist, highly detailed, sharp focus, sci-fi, "
+            "stunningly beautiful, dystopian, cinematic lighting, dark, 4K, dramatic lighting"
+        )
+        task = image_generator.generate(
+            text=prompt,
+            append_output_to_file=True,
+            options={"negative_prompt": NEGATIVE_PROMPT},
+        )
         task.wait()
         blocks = task.output.blocks
         logging.info(f"[{self.name}] got back {len(blocks)} blocks")

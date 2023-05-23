@@ -5,7 +5,10 @@ from langchain.agents import Tool, initialize_agent, AgentType, AgentExecutor
 from langchain.agents.conversational_chat.output_parser import ConvoOutputParser
 from langchain.memory import ConversationBufferMemory
 from pydantic import Field
-from steamship.experimental.package_starters.telegram_bot import TelegramBot, TelegramBotConfig
+from steamship.experimental.package_starters.telegram_bot import (
+    TelegramBot,
+    TelegramBotConfig,
+)
 from steamship.invocable import Config
 from steamship_langchain.llms import OpenAIChat
 from steamship_langchain.memory import ChatMessageHistory
@@ -21,15 +24,22 @@ MODEL_NAME = "gpt-4"  # or "gpt-4"
 TEMPERATURE = 0.7
 VERBOSE = True
 import langchain
+
 langchain.cache = None
 
+
 class GirlFriendAIConfig(TelegramBotConfig):
-    elevenlabs_api_key: str = Field(default="", description="Optional API KEY for ElevenLabs Voice Bot")
-    elevenlabs_voice_id: str = Field(default="", description="Optional voice_id for ElevenLabs Voice Bot")
+    elevenlabs_api_key: str = Field(
+        default="", description="Optional API KEY for ElevenLabs Voice Bot"
+    )
+    elevenlabs_voice_id: str = Field(
+        default="", description="Optional voice_id for ElevenLabs Voice Bot"
+    )
 
 
-class LangChainTelegramChatbot(LangChainAgentBot, TelegramBot):
+class GirlfriendGPT(LangChainAgentBot, TelegramBot):
     """Deploy LangChain chatbots and connect them to Telegram."""
+
     config: GirlFriendAIConfig
 
     @classmethod
@@ -67,8 +77,9 @@ class LangChainTelegramChatbot(LangChainAgentBot, TelegramBot):
         """Return tool to generate spoken version of output text."""
         # return None
         return GenerateSpeechTool(
-            client=self.client, voice_id=self.config.elevenlabs_voice_id,
-            elevenlabs_api_key=self.config.elevenlabs_api_key
+            client=self.client,
+            voice_id=self.config.elevenlabs_voice_id,
+            elevenlabs_api_key=self.config.elevenlabs_api_key,
         )
 
     def get_memory(self, chat_id):
@@ -92,5 +103,5 @@ class LangChainTelegramChatbot(LangChainAgentBot, TelegramBot):
             # GenerateImageTool(self.client),
             # GenerateAlbumArtTool(self.client)
             # RemindMe(invoke_later=self.invoke_later, chat_id=chat_id),
-            SelfieTool(self.client)
+            SelfieTool(self.client),
         ]
