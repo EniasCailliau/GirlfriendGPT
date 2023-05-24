@@ -2,7 +2,6 @@
 from typing import List, Optional, Type
 
 from langchain.agents import Tool, initialize_agent, AgentType, AgentExecutor
-from langchain.agents.conversational_chat.output_parser import ConvoOutputParser
 from langchain.memory import ConversationBufferMemory
 from pydantic import Field
 from steamship.experimental.package_starters.telegram_bot import (
@@ -14,11 +13,11 @@ from steamship_langchain.llms import OpenAIChat
 from steamship_langchain.memory import ChatMessageHistory
 
 from agent.base import LangChainAgentBot
-from agent.parser import MultiModalOutputParser
 from agent.tools.search import SearchTool
 from agent.tools.selfie import SelfieTool
 from agent.tools.speech import GenerateSpeechTool
-from prompts import PERSONALITY, SUFFIX, FORMAT_INSTRUCTIONS
+from personalities import get_personality
+from prompts import SUFFIX, FORMAT_INSTRUCTIONS, PERSONALITY_PROMPT
 
 MODEL_NAME = "gpt-4"  # or "gpt-4"
 TEMPERATURE = 0.7
@@ -65,7 +64,7 @@ class GirlfriendGPT(LangChainAgentBot, TelegramBot):
             agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION,
             agent_kwargs={
                 # "output_parser": MultiModalOutputParser(ConvoOutputParser()),
-                "prefix": PERSONALITY,
+                "prefix": PERSONALITY_PROMPT.format(personality=get_personality("luna")),
                 "suffix": SUFFIX,
                 "format_instructions": FORMAT_INSTRUCTIONS,
             },
