@@ -16,6 +16,14 @@ Click the image below for a demo:
 * Personality: Customize the AI's personality according to your preferences.
 * Selfies: AI is capable of generating SELFIES when asked.
 
+## Getting started 
+
+```
+
+pip install -r requirements.txt
+python deploy.py 
+```
+
 
 ## Roadmap
 * Memories: Soon, the AI will have the capability to remember past interactions, improving conversational context and depth.
