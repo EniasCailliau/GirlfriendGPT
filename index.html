@@ -1,15 +1,36 @@
-<!DOCTYPE html>
-<html>
-
 <head>
-    <title>Retro Profile Collection</title>
+    <!-- This will show up on the tab in your browser -->
+    <title>GirlfriendGPT</title>
     <style>
-        body {
-            background-color: #A0A0A0;
-            font-family: 'Courier New', Courier, monospace;
+
+    .banner {
+            padding: 30px;
+            text-align: center;
+            color: white;
+            background: linear-gradient(270deg, #ff00cc, #3333cc);
+            background-size: 200% 200%;
+            animation: Gradient 2s ease infinite;
+            border: 5px solid #000000;
         }
 
-        .grid {
+        .banner h1 {
+            font-size: 3em;
+            text-shadow: 3px 3px #000000;
+            animation: flash 1s linear infinite;
+        }
+
+        @keyframes Gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes flash {
+            0%,100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+     .grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             grid-gap: 10px;
@@ -34,28 +55,97 @@
         }
 
         .card-content {
-            position: relative;
-            z-index: 1;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0,0,0,0.6);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            color: #fff; /* This changes the text color to white */
         }
+
+        .card:hover .card-content {
+            opacity: 1;
+        }
+
+        body {
+            text-align: center;
+            margin: 0px;
+            font-family: "Comic Sans MS";
+            background-color: #A0A0A0;
+
+        }
+
+        .about {
+            background-color: yellow;
+            padding: 0px;
+        }
+
+        .cta {
+        margin: 30px;
+            padding: 30px;
+            text-align: center;
+            background-color: #00ccff;
+            border: 5px solid #000000;
+        }
+
+        .cta h2 {
+            font-size: 2em;
+        }
+
+        .cta p {
+            font-size: 1.2em;
+        }
+
 
     </style>
 </head>
+</head>
 
 <body>
-    <h1 style="text-align: center; color: #0000FF;">Retro Profile Collection</h1>
-    <div id="grid" class="grid"></div>
+<!-- This is the start of the "About" section -->
+<div class="about">
+    <h1>GirlfriendGPT</h1>
+    <h2>A AI girlfriend experiment by <a Enias Cailliau</a></h2>
+</div>
 
-    <script>
-        const girlfriends = [
-            { name: 'Name1', handle: 'Handle1', description: 'Description1', backgroundImage: 'https://example.com/image1.jpg' },
-            { name: 'Name2', handle: 'Handle2', description: 'Description2', backgroundImage: 'https://example.com/image2.jpg' },
+
+<h1>Personalities:</h1>
+
+<div id="grid" class="grid"></div>
+
+<div class="cta">
+    <h2>Contribute a Personality and Win!</h2>
+    <p>We're looking for new personalities for GirlfriendGPT.
+        If your submission is chosen as the best, you could win $100!
+        Click <a href="https://github.com/EniasCailliau/GirlfriendGPT">here</a> to get started.</p>
+</div>
+
+
+<!-- This is the start of the projects section -->
+<a href="https://www.github.com/EniasCailliau/GirlfriendGPT">
+    <div class="about">
+        <h1>Source code</h1>
+    </div>
+</a>
+
+<script>
+         const girlfriends = [
+            { name: 'Sacha', description: 'high energy mama of 1', backgroundImage: 'docs/img/personalities/sacha.png' },
+            { name: 'Luna', description: 'Kind, bubbly traveler', backgroundImage: 'docs/img/personalities/luna_2.jpeg' },
             // add as many as you need
         ];
 
-        window.onload = function() {
+       window.onload = function() {
             const grid = document.getElementById('grid');
 
-            girlfriends.forEach(function(girlfriend) {
+           girlfriends.forEach(function(girlfriend) {
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.style.backgroundImage = `url(${girlfriend.backgroundImage})`;
@@ -67,10 +157,6 @@
                 name.innerText = girlfriend.name;
                 cardContent.appendChild(name);
 
-                const handle = document.createElement('p');
-                handle.innerText = girlfriend.handle;
-                cardContent.appendChild(handle);
-
                 const description = document.createElement('p');
                 description.innerText = girlfriend.description;
                 cardContent.appendChild(description);
@@ -78,8 +164,8 @@
                 card.appendChild(cardContent);
                 grid.appendChild(card);
             });
-        };
-    </script>
-</body>
 
-</html>
+        };
+
+</script>
+</body>
