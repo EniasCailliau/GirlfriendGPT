@@ -1,6 +1,7 @@
 """Scaffolding to host your LangChain Chatbot on Steamship and connect it to Telegram."""
 from typing import List, Optional, Type
 
+import langchain
 from langchain.agents import Tool, initialize_agent, AgentType, AgentExecutor
 from langchain.memory import ConversationBufferMemory
 from pydantic import Field
@@ -22,7 +23,7 @@ from prompts import SUFFIX, FORMAT_INSTRUCTIONS, PERSONALITY_PROMPT
 MODEL_NAME = "gpt-4"  # or "gpt-4"
 TEMPERATURE = 0.7
 VERBOSE = True
-import langchain
+PERSONALITY = "sacha"
 
 langchain.cache = None
 
@@ -64,7 +65,7 @@ class GirlfriendGPT(LangChainAgentBot, TelegramBot):
             agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION,
             agent_kwargs={
                 # "output_parser": MultiModalOutputParser(ConvoOutputParser()),
-                "prefix": PERSONALITY_PROMPT.format(personality=get_personality("luna")),
+                "prefix": PERSONALITY_PROMPT.format(personality=get_personality(PERSONALITY)),
                 "suffix": SUFFIX,
                 "format_instructions": FORMAT_INSTRUCTIONS,
             },
