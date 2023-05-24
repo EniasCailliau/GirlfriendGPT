@@ -1,7 +1,7 @@
 {
 	"type": "package",
 	"handle": "sacha-gpt-bot",
-	"version": "1.0.0-rc.3",
+	"version": "1.0.0-rc.21",
 	"description": "",
 	"author": "",
 	"entrypoint": "Unused",
@@ -18,6 +18,16 @@
 			"type": "string",
 			"description": "The secret token for your Telegram bot",
 			"default": null
+		},
+		"elevenlabs_api_key": {
+			"type": "string",
+			"description": "Optional API KEY for ElevenLabs Voice Bot",
+			"default": ""
+		},
+		"elevenlabs_voice_id": {
+			"type": "string",
+			"description": "Optional voice_id for ElevenLabs Voice Bot",
+			"default": ""
 		}
 	},
 	"steamshipRegistry": {

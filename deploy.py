@@ -21,8 +21,8 @@ bot = client.use(
     instance_handle=f"{manifest.handle}-{manifest.version.replace('.', '-')}",
     config={
         "bot_token": os.environ.get("BOT_TOKEN") or input("bot_token: "),
-        "elevenlabs_voice_id": os.environ.get("ELEVENLABS_VOICE_ID"),
-        "elevenlabs_api_key": os.environ.get("ELEVENLABS_API_KEY"),
+        "elevenlabs_voice_id": os.environ.get("ELEVENLABS_VOICE_ID", ""),
+        "elevenlabs_api_key": os.environ.get("ELEVENLABS_API_KEY", ""),
     },
 )
 

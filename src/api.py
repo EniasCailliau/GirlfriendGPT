@@ -75,12 +75,11 @@ class GirlfriendGPT(LangChainAgentBot, TelegramBot):
 
     def voice_tool(self) -> Optional[Tool]:
         """Return tool to generate spoken version of output text."""
-        return None
-        # return GenerateSpeechTool(
-        #     client=self.client,
-            # voice_id=self.config.elevenlabs_voice_id or "",
-            # elevenlabs_api_key=self.config.elevenlabs_api_key or "",
-        # )
+        return GenerateSpeechTool(
+            client=self.client,
+            voice_id=self.config.elevenlabs_voice_id,
+            elevenlabs_api_key=self.config.elevenlabs_api_key,
+        )
 
     def get_memory(self, chat_id):
         if self.context and self.context.invocable_instance_handle:
