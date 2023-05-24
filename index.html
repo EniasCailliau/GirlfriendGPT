@@ -137,9 +137,8 @@
 
 <script>
          const girlfriends = [
-            { name: 'Sacha', description: 'high energy mama of 1', backgroundImage: 'docs/img/personalities/sacha.png' },
-            { name: 'Luna', description: 'Kind, bubbly traveler', backgroundImage: 'docs/img/personalities/luna_2.jpeg' },
-            // add as many as you need
+            { name: 'Sacha', description: 'high energy mama of 1', backgroundImage: 'docs/img/personalities/sacha.png', url: 'https://github.com/EniasCailliau/GirlfriendGPT/blob/main/src/personalities/sacha.py' },
+            { name: 'Luna', description: 'Kind, bubbly traveler', backgroundImage: 'docs/img/personalities/luna_2.jpeg', url: 'https://github.com/EniasCailliau/GirlfriendGPT/blob/main/src/personalities/luna.py' },
         ];
 
        window.onload = function() {
@@ -162,6 +161,9 @@
                 cardContent.appendChild(description);
 
                 card.appendChild(cardContent);
+                card.onclick = function() {
+                    window.location.href = girlfriend.url;
+                };
                 grid.appendChild(card);
             });
 
