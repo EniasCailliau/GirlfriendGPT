@@ -1,20 +1,85 @@
+<!DOCTYPE html>
+<html>
+
 <head>
-    <!-- This will show up on the tab in your browser -->
-    <title>GirlfriendGPT</title>
-    <link rel="stylesheet" type="text/css" href="index.css">
+    <title>Retro Profile Collection</title>
+    <style>
+        body {
+            background-color: #A0A0A0;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 10px;
+        }
+
+        .card {
+            background-color: #00FF00;
+            border: 2px solid #0000FF;
+            padding: 10px;
+            margin: 10px;
+            background-size: cover;
+            background-position: center;
+            color: #000;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: "";
+            float: left;
+            padding-top: 100%;
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 1;
+        }
+
+    </style>
 </head>
 
 <body>
-<!-- This is the start of the "About" section -->
-<div class="about">
-    <h1>GirlfriendGPT</h1>
-    <h2>A AI girlfriend experiment by <a Enias Cailliau</a></h2>
-</div>
+    <h1 style="text-align: center; color: #0000FF;">Retro Profile Collection</h1>
+    <div id="grid" class="grid"></div>
 
-<!-- This is the start of the projects section -->
-<a href="https://www.github.com/EniasCailliau/GirlfriendGPT">
-    <div class="projects">
-        <h1>Source code</h1>
-    </div>
-</a>
+    <script>
+        const girlfriends = [
+            { name: 'Name1', handle: 'Handle1', description: 'Description1', backgroundImage: 'https://example.com/image1.jpg' },
+            { name: 'Name2', handle: 'Handle2', description: 'Description2', backgroundImage: 'https://example.com/image2.jpg' },
+            // add as many as you need
+        ];
+
+        window.onload = function() {
+            const grid = document.getElementById('grid');
+
+            girlfriends.forEach(function(girlfriend) {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.style.backgroundImage = `url(${girlfriend.backgroundImage})`;
+
+                const cardContent = document.createElement('div');
+                cardContent.className = 'card-content';
+
+                const name = document.createElement('h2');
+                name.innerText = girlfriend.name;
+                cardContent.appendChild(name);
+
+                const handle = document.createElement('p');
+                handle.innerText = girlfriend.handle;
+                cardContent.appendChild(handle);
+
+                const description = document.createElement('p');
+                description.innerText = girlfriend.description;
+                cardContent.appendChild(description);
+
+                card.appendChild(cardContent);
+                grid.appendChild(card);
+            });
+        };
+    </script>
 </body>
+
+</html>
