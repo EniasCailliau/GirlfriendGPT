@@ -1,6 +1,6 @@
 from .luna import luna
 from .sacha import sacha
-from .angele import sacha
+from .angele import angele
 
 __all__ = [
     "sacha",
