@@ -15,8 +15,7 @@ def get_personality(name: str):
         return {
             "luna": luna,
             "sacha": sacha,
-             "Angèle": angele
-
+            "Angèle": angele
         }[name]
     except Exception:
         raise Exception("The personality you selected does not exist!")
