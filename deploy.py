@@ -20,7 +20,7 @@ bot = client.use(
     version=manifest.version,
     instance_handle=f"{manifest.handle}-{manifest.version.replace('.', '-')}",
     config={
-        "bot_token": os.environ.get("BOT_TOKEN") or input("bot_token: "),
+        "bot_token": os.environ.get("BOT_TOKEN") or input("Paste your telegram bot token\nLearn how to create one here: https://github.com/EniasCailliau/GirlfriendGPT/blob/main/docs/register-telegram-bot.md)\n: "),
         "elevenlabs_voice_id": os.environ.get("ELEVENLABS_VOICE_ID", ""),
         "elevenlabs_api_key": os.environ.get("ELEVENLABS_API_KEY", ""),
     },

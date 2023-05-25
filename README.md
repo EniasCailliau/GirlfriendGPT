@@ -18,15 +18,20 @@ Click the image below for a demo:
 
 ## Getting started 
 
+To run your companion locally:
+```
+pip install -r requirements.txt
+python main.py 
 ```
 
-pip install -r requirements.txt
-python deploy.py 
-```
+To deploy your companion & connect it to Telegram:
+
+You will need to fetch a Telegram key to connect your companion to Telegram. [This guide](/docs/register-telegram-bot.md) will show you how.
 
 
 ## Roadmap
 * Memories: Soon, the AI will have the capability to remember past interactions, improving conversational context and depth.
+* Photorealistic selfies
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
@@ -51,12 +56,12 @@ Import your new personality at the top of the file and add your personality to t
 ```python
 from .luna import luna
 from .sacha import sacha
-from .jane import jane  # This is your new personality
+from .lucas import lucas  # This is your new personality
 
 __all__ = [
     "sacha",
     "luna",
-    "jane",  # Add your personality here
+    "lucas",  # Add your personality here
     "get_personality"
 ]
 ```
@@ -69,7 +74,7 @@ def get_personality(name: str):
         return {
             "luna": luna,
             "sacha": sacha,
-            "jane": jane  # Add your personality here
+            "lucas": lucas  # Add your personality here
         }[name]
     except Exception:
         raise Exception("The personality you selected does not exist!")
