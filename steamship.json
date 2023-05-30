@@ -1,7 +1,7 @@
 {
 	"type": "package",
 	"handle": "sacha-gpt-bot",
-	"version": "1.0.0-rc.24",
+	"version": "1.0.0-rc.26",
 	"description": "",
 	"author": "",
 	"entrypoint": "Unused",
