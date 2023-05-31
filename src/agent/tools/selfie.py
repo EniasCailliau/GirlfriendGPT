@@ -15,9 +15,11 @@ Output: the UUID of the generated selfie showing what you're doing or where you 
 
 PLUGIN_HANDLE = "stable-diffusion"
 
-NEGATIVE_PROMPT = ("(bonnet), (hat), (beanie), cap, (((wide shot))), (cropped head), bad framing, "
-                   "out of frame, deformed, cripple, old, fat, ugly, poor, missing arm, additional arms, "
-                   "additional legs, additional head, additional face, dyed hair, black and white, grayscale")
+NEGATIVE_PROMPT = (
+    "(bonnet), (hat), (beanie), cap, (((wide shot))), (cropped head), bad framing, "
+    "out of frame, deformed, cripple, old, fat, ugly, poor, missing arm, additional arms, "
+    "additional legs, additional head, additional face, dyed hair, black and white, grayscale"
+)
 
 
 class SelfieTool(Tool):
@@ -42,14 +44,14 @@ class SelfieTool(Tool):
         )
 
         prompt = prompt + (
-           "professional portrait photograph of a gorgeous Norwegian girl with long wavy blonde hair, "
-           f"{prompt}"
-           "((sultry flirty look)), freckles, beautiful symmetrical face, cute natural makeup, "
-           "((standing outside in snowy city street)), "
-           "stunning modern urban upscale environment, ultra realistic, concept art, elegant, highly detailed, "
-           "intricate, sharp focus, depth of field, f/1. 8, 85mm, medium shot, mid shot, (centered image composition), "
-           "(professionally color graded), ((bright soft diffused light)), volumetric fog, "
-           "trending on instagram, trending on tumblr, hdr 4k, 8k"
+            "professional portrait photograph of a gorgeous Norwegian girl with long wavy blonde hair, "
+            f"{prompt}"
+            "((sultry flirty look)), freckles, beautiful symmetrical face, cute natural makeup, "
+            "((standing outside in snowy city street)), "
+            "stunning modern urban upscale environment, ultra realistic, concept art, elegant, highly detailed, "
+            "intricate, sharp focus, depth of field, f/1. 8, 85mm, medium shot, mid shot, (centered image composition), "
+            "(professionally color graded), ((bright soft diffused light)), volumetric fog, "
+            "trending on instagram, trending on tumblr, hdr 4k, 8k"
         )
         task = image_generator.generate(
             text=prompt,

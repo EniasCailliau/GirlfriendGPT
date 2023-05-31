@@ -65,7 +65,9 @@ class GirlfriendGPT(LangChainAgentBot, TelegramBot):
             agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION,
             agent_kwargs={
                 # "output_parser": MultiModalOutputParser(ConvoOutputParser()),
-                "prefix": PERSONALITY_PROMPT.format(personality=get_personality(PERSONALITY)),
+                "prefix": PERSONALITY_PROMPT.format(
+                    personality=get_personality(PERSONALITY)
+                ),
                 "suffix": SUFFIX,
                 "format_instructions": FORMAT_INSTRUCTIONS,
             },
