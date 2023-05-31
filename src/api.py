@@ -3,7 +3,7 @@ from typing import List, Optional, Type
 
 import langchain
 from langchain.agents import Tool, initialize_agent, AgentType, AgentExecutor
-from langchain.memory import ConversationBufferMemory
+from langchain.memory import ConversationBufferWindowMemory
 from pydantic import Field
 from steamship.experimental.package_starters.telegram_bot import (
     TelegramBot,
@@ -17,6 +17,7 @@ from agent.base import LangChainAgentBot
 from agent.tools.search import SearchTool
 from agent.tools.selfie import SelfieTool
 from agent.tools.speech import GenerateSpeechTool
+from agent.tools.video_message import VideoMessageTool
 from personalities import get_personality
 from prompts import SUFFIX, FORMAT_INSTRUCTIONS, PERSONALITY_PROMPT
 
@@ -24,11 +25,15 @@ MODEL_NAME = "gpt-4"  # or "gpt-4"
 TEMPERATURE = 0.7
 VERBOSE = True
 PERSONALITY = "sacha"
+MEMORY_WINDOW_SIZE = 5
 
 langchain.cache = None
 
 
 class GirlFriendAIConfig(TelegramBotConfig):
+    bot_token: str = Field(
+        description="Your telegram bot token.\nLearn how to create one here: "
+                    "https://github.com/EniasCailliau/GirlfriendGPT/blob/main/docs/register-telegram-bot.md")
     elevenlabs_api_key: str = Field(
         default="", description="Optional API KEY for ElevenLabs Voice Bot"
     )
@@ -88,12 +93,14 @@ class GirlfriendGPT(LangChainAgentBot, TelegramBot):
             my_instance_handle = self.context.invocable_instance_handle
         else:
             my_instance_handle = "local-instance-handle"
-        memory = ConversationBufferMemory(
+
+        memory = ConversationBufferWindowMemory(
             memory_key="chat_history",
             chat_memory=ChatMessageHistory(
                 client=self.client, key=f"history-{chat_id}-{my_instance_handle}"
             ),
             return_messages=True,
+            k=MEMORY_WINDOW_SIZE,
         )
         return memory
 
@@ -104,5 +111,6 @@ class GirlfriendGPT(LangChainAgentBot, TelegramBot):
             # GenerateImageTool(self.client),
             # GenerateAlbumArtTool(self.client)
             # RemindMe(invoke_later=self.invoke_later, chat_id=chat_id),
+            VideoMessageTool(self.client),
             SelfieTool(self.client),
         ]
