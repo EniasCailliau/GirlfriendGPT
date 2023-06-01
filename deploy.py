@@ -8,7 +8,7 @@ from steamship.data.manifest import Manifest
 try:
     deploy()
 except SystemExit as err:
-    exit()
+    pass
 
 manifest = Manifest.load_manifest()
 
@@ -25,6 +25,8 @@ bot = client.use(
         ),
         "elevenlabs_voice_id": os.environ.get("ELEVENLABS_VOICE_ID", ""),
         "elevenlabs_api_key": os.environ.get("ELEVENLABS_API_KEY", ""),
+        "did_api_key": os.environ.get("DID_API_KEY", ""),
+
     },
 )
 
