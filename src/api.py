@@ -17,6 +17,7 @@ from agent.base import LangChainAgentBot
 from agent.tools.search import SearchTool
 from agent.tools.selfie import SelfieTool
 from agent.tools.speech import GenerateSpeechTool
+from agent.tools.video_message import VideoMessageTool
 from personalities import get_personality
 from prompts import SUFFIX, FORMAT_INSTRUCTIONS, PERSONALITY_PROMPT
 
@@ -38,6 +39,10 @@ class GirlFriendAIConfig(TelegramBotConfig):
     )
     elevenlabs_voice_id: str = Field(
         default="", description="Optional voice_id for ElevenLabs Voice Bot"
+    )
+
+    did_api_key: str = Field(
+        default="", description="API KEY for D-ID"
     )
 
 
@@ -81,11 +86,12 @@ class GirlfriendGPT(LangChainAgentBot, TelegramBot):
 
     def voice_tool(self) -> Optional[Tool]:
         """Return tool to generate spoken version of output text."""
-        return GenerateSpeechTool(
-            client=self.client,
-            voice_id=self.config.elevenlabs_voice_id,
-            elevenlabs_api_key=self.config.elevenlabs_api_key,
-        )
+        return None
+        # GenerateSpeechTool(
+        #     client=self.client,
+        #     voice_id=self.config.elevenlabs_voice_id,
+        #     elevenlabs_api_key=self.config.elevenlabs_api_key,
+        # )
 
     def get_memory(self, chat_id):
         if self.context and self.context.invocable_instance_handle:
@@ -104,12 +110,15 @@ class GirlfriendGPT(LangChainAgentBot, TelegramBot):
         return memory
 
     def get_tools(self, chat_id: str) -> List[Tool]:
-        return [
+        tools = [
             SearchTool(self.client),
             # MyTool(self.client),
             # GenerateImageTool(self.client),
             # GenerateAlbumArtTool(self.client)
             # RemindMe(invoke_later=self.invoke_later, chat_id=chat_id),
-            # VideoMessageTool(self.client),
             SelfieTool(self.client),
         ]
+        if self.config.did_api_key:
+            tools.append(VideoMessageTool(self.client, api_key=self.config.did_api_key))
+
+        return tools

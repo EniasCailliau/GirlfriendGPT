@@ -1,7 +1,7 @@
 {
 	"type": "package",
 	"handle": "sacha-gpt-bot",
-	"version": "1.1.0",
+	"version": "1.0.0-rc.43",
 	"description": "",
 	"author": "",
 	"entrypoint": "Unused",
@@ -27,6 +27,11 @@
 		"elevenlabs_voice_id": {
 			"type": "string",
 			"description": "Optional voice_id for ElevenLabs Voice Bot",
+			"default": ""
+		},
+		"did_api_key": {
+			"type": "string",
+			"description": "API KEY for D-ID",
 			"default": ""
 		}
 	},

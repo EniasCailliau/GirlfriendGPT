@@ -56,7 +56,9 @@ def main():
 
         while True:
             print(f"----- Agent Run {count} -----")
-            prompt = input(colored(f"Prompt: ", "blue"))
+            if count > 1:
+                exit()
+            prompt = "Can you send me a video message?" # input(colored(f"Prompt: ", "blue"))
             run(
                 # client,
                 prompt=prompt,

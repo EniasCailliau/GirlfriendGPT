@@ -86,7 +86,7 @@ class LangChainAgentBot(TelegramBot):
         )
 
     def agent_output_to_chat_messages(
-        self, chat_id: str, response_messages: List[str]
+            self, chat_id: str, response_messages: List[str]
     ) -> List[Block]:
         """Transform the output of the Multi-Modal Agent into a list of ChatMessage objects.
 
