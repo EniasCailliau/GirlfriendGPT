@@ -111,6 +111,6 @@ class GirlfriendGPT(LangChainAgentBot, TelegramBot):
             # GenerateImageTool(self.client),
             # GenerateAlbumArtTool(self.client)
             # RemindMe(invoke_later=self.invoke_later, chat_id=chat_id),
-            VideoMessageTool(self.client),
+            # VideoMessageTool(self.client),
             SelfieTool(self.client),
         ]
