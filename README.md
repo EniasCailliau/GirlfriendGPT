@@ -19,12 +19,18 @@ Click the image below for a demo:
 ## Getting started 
 
 To run your companion locally:
+
 ```
 pip install -r requirements.txt
 python main.py 
 ```
 
 To deploy your companion & connect it to Telegram:
+
+```
+pip install -r requirements.txt
+python deploy.py 
+```
 
 You will need to fetch a Telegram key to connect your companion to Telegram. [This guide](/docs/register-telegram-bot.md) will show you how.
 
