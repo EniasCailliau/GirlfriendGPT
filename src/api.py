@@ -17,7 +17,6 @@ from agent.base import LangChainAgentBot
 from agent.tools.search import SearchTool
 from agent.tools.selfie import SelfieTool
 from agent.tools.speech import GenerateSpeechTool
-from agent.tools.video_message import VideoMessageTool
 from personalities import get_personality
 from prompts import SUFFIX, FORMAT_INSTRUCTIONS, PERSONALITY_PROMPT
 
