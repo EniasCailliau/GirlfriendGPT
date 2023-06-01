@@ -1,7 +1,7 @@
 {
 	"type": "package",
 	"handle": "sacha-gpt-bot",
-	"version": "1.1.0",
+	"version": "1.3.0-rc.3",
 	"description": "",
 	"author": "",
 	"entrypoint": "Unused",
@@ -27,6 +27,11 @@
 		"elevenlabs_voice_id": {
 			"type": "string",
 			"description": "Optional voice_id for ElevenLabs Voice Bot",
+			"default": ""
+		},
+		"chat_ids": {
+			"type": "string",
+			"description": "Comma separated list of whitelisted chat_id's",
 			"default": ""
 		}
 	},

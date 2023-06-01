@@ -39,6 +39,9 @@ class GirlFriendAIConfig(TelegramBotConfig):
     elevenlabs_voice_id: str = Field(
         default="", description="Optional voice_id for ElevenLabs Voice Bot"
     )
+    chat_ids: str = Field(
+        default="", description="Comma separated list of whitelisted chat_id's"
+    )
 
 
 class GirlfriendGPT(LangChainAgentBot, TelegramBot):
