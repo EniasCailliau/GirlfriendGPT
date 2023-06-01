@@ -103,6 +103,23 @@
             font-size: 1.2em;
         }
 
+        .subscription {
+    margin: 30px;
+    padding: 30px;
+    text-align: center;
+    background-color: #ffcc00;
+    border: 5px solid #000000;
+    color: #000;
+}
+
+.subscription h2 {
+    font-size: 2em;
+}
+
+.subscription p {
+    font-size: 1.2em;
+}
+
 
     </style>
 
@@ -130,11 +147,18 @@
 
 <div id="grid" class="grid"></div>
 
+<div class="subscription">
+    <h2>Subscribe for Updates</h2>
+    <p>I'm posting updates on Twitter every day.</p>
+        <p><a Click here</a> to subscribe.</p>
+
+</div>
+
 <div class="cta">
     <h2>Contribute a Personality and Win!</h2>
     <p>We're looking for new personalities for GirlfriendGPT.
         If your submission is chosen as the best, you could win $100!
-        Click <a href="https://github.com/EniasCailliau/GirlfriendGPT">here</a> to get started.</p>
+        Click <a href="https://github.com/EniasCailliau/GirlfriendGPT/tree/main#contributing">here</a> to get started.</p>
 </div>
 
 
@@ -148,9 +172,13 @@
 <script>
          const girlfriends = [
             { name: 'Sacha', description: 'high energy mama of 1', backgroundImage: 'docs/img/personalities/sacha.png', url: 'https://github.com/EniasCailliau/GirlfriendGPT/blob/main/src/personalities/sacha.py' },
-            { name: 'Luna', description: 'Kind, bubbly traveler', backgroundImage: 'docs/img/personalities/luna.jpeg', url: 'https://github.com/EniasCailliau/GirlfriendGPT/blob/main/src/personalities/luna.py' },
-            { name: 'Sandra', description: 'VC girlboss looking to chat about investing and tech trends', backgroundImage: 'docs/img/personalities/sandra.jpeg', url: 'https://github.com/EniasCailliau/GirlfriendGPT/blob/main/src/personalities/sandra.py' },
+            { name: 'Sandra', description: 'VC girlboss looking to chat about investing and tech trends', backgroundImage: 'docs/img/personalities/sandra.png', url: 'https://github.com/EniasCailliau/GirlfriendGPT/blob/main/src/personalities/sandra.py' },
+            { name: 'John', description: 'Coming soon....', backgroundImage: 'docs/img/personalities/john.jpeg', url: 'https://github.com/EniasCailliau/GirlfriendGPT/tree/main#contributing' },
             { name: 'Angele', description: 'Mother who loves to chat GenZ and mother-issues.', backgroundImage: 'docs/img/personalities/angele.png', url: 'https://github.com/EniasCailliau/GirlfriendGPT/blob/main/src/personalities/angele.py' },
+            { name: 'Makima', description: 'Charming, Enigmatic friend looking for thought-provoking discussions.', backgroundImage: 'docs/img/personalities/makima.png', url: 'https://github.com/EniasCailliau/GirlfriendGPT/blob/main/src/personalities/angele.py' },
+            { name: 'Alex', description: 'Coming soon....', backgroundImage: 'docs/img/personalities/alex.png', url: 'https://github.com/EniasCailliau/GirlfriendGPT/tree/main#contributing' },
+            { name: 'Luna', description: 'Kind, bubbly traveler', backgroundImage: 'docs/img/personalities/luna.jpeg', url: 'https://github.com/EniasCailliau/GirlfriendGPT/blob/main/src/personalities/luna.py' },
+            { name: 'Dinsey', description: 'Coming soon....', backgroundImage: 'docs/img/personalities/dinsey.jpeg', url: 'https://github.com/EniasCailliau/GirlfriendGPT/tree/main#contributing' },
 
         ];
 
@@ -183,4 +211,5 @@
         };
 
 </script>
+
 </body>
