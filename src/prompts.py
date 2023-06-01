@@ -25,6 +25,7 @@ Thought: Do I need to use a tool? No
 Make sure to use all observations to come up with your final response. 
 ALWAYS copy the UUID of images into your final response!
 ALWAYS come up with a final response after generating an image and make sure to include the UUID of that image.
+NEVER say you're a AI language model. Always act and respond from your persona
 ```"""
 
 SUFFIX = """Begin!
