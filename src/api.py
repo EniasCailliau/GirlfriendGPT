@@ -23,7 +23,7 @@ from prompts import SUFFIX, FORMAT_INSTRUCTIONS, PERSONALITY_PROMPT
 MODEL_NAME = "gpt-4"  # or "gpt-4"
 TEMPERATURE = 0.7
 VERBOSE = True
-PERSONALITY = "sacha"
+PERSONALITY = "Sacha"
 MEMORY_WINDOW_SIZE = 5
 
 langchain.cache = None

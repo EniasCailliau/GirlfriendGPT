@@ -1,8 +1,11 @@
+from .alix_earle import alix_earle
+from .angele import angele
+from .jack_dawson import jack_dawson
+from .jordan_belfort import jordan_belfort
 from .luna import luna
+from .makima import makima
 from .sacha import sacha
 from .sandra import sandra
-from .angele import angele
-from .makima import makima
 
 __all__ = [
     "sacha",
@@ -10,7 +13,9 @@ __all__ = [
     "angele",
     "makima",
     "sandra",
-  "angele",
+    "alix_earle",
+    "jack_dawson",
+    "jordan_belfort",
     "get_personality"
 ]
 
@@ -18,11 +23,14 @@ __all__ = [
 def get_personality(name: str):
     try:
         return {
-            "luna": luna,
-            "sacha": sacha,
+            "Sacha": sacha,
+            "Luna": luna,
             "Angèle": angele,
-            "Makima": makima
-            "sandra": sandra,
+            "Makima": makima,
+            "Sandra": sandra,
+            "Alix Earle": alix_earle,
+            "Jack Dawson": jack_dawson,
+            "Jordan Belfort": jordan_belfort,
         }[name]
     except Exception:
         raise Exception("The personality you selected does not exist!")
