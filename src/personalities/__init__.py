@@ -1,11 +1,13 @@
 from .luna import luna
 from .sacha import sacha
-from sandra.py import sandra
+from .sandra import sandra
+from .angele import angele
 
 __all__ = [
     "sacha",
     "luna",
     "sandra",
+  "angele",
     "get_personality"
 ]
 
@@ -15,7 +17,8 @@ def get_personality(name: str):
         return {
             "luna": luna,
             "sacha": sacha,
-            "sandra": sandra
+            "sandra": sandra,
+          "Angèle": angele
         }[name]
     except Exception:
         raise Exception("The personality you selected does not exist!")
