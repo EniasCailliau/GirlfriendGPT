@@ -6,14 +6,13 @@ sys.path.insert(0, "src")
 from functools import partial
 from typing import List
 
-from steamship.experimental.transports.chat import ChatMessage
-from steamship import Steamship, SteamshipError
+from steamship import Steamship, SteamshipError, Block
 from steamship.cli.ship_spinner import ship_spinner
 from termcolor import colored
 from api import GirlfriendGPT
 
 
-def show_results(response_messages: List[ChatMessage]):
+def show_results(response_messages: List[Block]):
     print(colored("\nResults: ", "blue", attrs=["bold"]))
     for message in response_messages:
         if message.mime_type:
@@ -67,16 +66,14 @@ def main():
 
 def run_agent(agent, prompt: str, as_api: bool = False) -> None:
     # For Debugging
+    message = Block(text=prompt)
+    message.set_chat_id("123")
     if not agent.is_verbose_logging_enabled():  # display progress when verbose is False
         print("Running: ", end="")
         with ship_spinner():
-            response = agent.create_response(
-                incoming_message=ChatMessage(text=prompt, chat_id="123")
-            )
+            response = agent.create_response(incoming_message=message)
     else:
-        response = agent.create_response(
-            incoming_message=ChatMessage(text=prompt, chat_id="123")
-        )
+        response = agent.create_response(incoming_message=message)
 
     show_results(response)
 
