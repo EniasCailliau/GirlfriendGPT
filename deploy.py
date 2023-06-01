@@ -26,7 +26,7 @@ bot = client.use(
         "elevenlabs_voice_id": os.environ.get("ELEVENLABS_VOICE_ID", ""),
         "elevenlabs_api_key": os.environ.get("ELEVENLABS_API_KEY", ""),
         "did_api_key": os.environ.get("DID_API_KEY", ""),
-
+        "chat_ids": os.environ.get("CHAT_IDS", ""),
     },
 )
 

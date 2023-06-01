@@ -58,6 +58,25 @@ class LangChainAgentBot(TelegramBot):
     def create_response(self, incoming_message: Block) -> Optional[List[Block]]:
         """Use the LLM to prepare the next response by appending the user input to the file and then generating."""
         chat_id = incoming_message.chat_id
+        if hasattr(self.config, "chat_ids") and self.config.chat_ids:
+            if chat_id not in self.config.chat_ids.split(","):
+                if hasattr(self, "get_memory") and len(self.get_memory(chat_id).buffer) > 10:
+                    message_1 = Block(
+                        text="Thanks for trying out SachaGPT!",
+                    )
+                    message_1.set_chat_id(chat_id)
+
+                    message_2 = Block(
+                        text="Please deploy your own version GirlfriendGPT to continue chatting.",
+                    )
+                    message_2.set_chat_id(chat_id)
+
+                    message_3 = Block(
+                        text="Learn how on: https://github.com/EniasCailliau/GirlfriendGPT/",
+                    )
+                    message_3.set_chat_id(chat_id)
+                    return [message_1, message_2, message_3]
+
         if incoming_message.text == "/start":
             message = Block(
                 text="New conversation started.",

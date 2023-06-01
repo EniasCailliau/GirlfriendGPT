@@ -1,7 +1,11 @@
 {
 	"type": "package",
 	"handle": "sacha-gpt-bot",
+<<<<<<< HEAD
 	"version": "1.0.0-rc.45",
+=======
+	"version": "1.3.0-rc.3",
+>>>>>>> main
 	"description": "",
 	"author": "",
 	"entrypoint": "Unused",
@@ -32,6 +36,9 @@
 		"did_api_key": {
 			"type": "string",
 			"description": "API KEY for D-ID",
+		"chat_ids": {
+			"type": "string",
+			"description": "Comma separated list of whitelisted chat_id's",
 			"default": ""
 		}
 	},
