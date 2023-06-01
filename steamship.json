@@ -1,7 +1,7 @@
 {
 	"type": "package",
 	"handle": "sacha-gpt-bot",
-	"version": "1.0.0-rc.35",
+	"version": "1.1.0",
 	"description": "",
 	"author": "",
 	"entrypoint": "Unused",
@@ -16,7 +16,7 @@
 	"configTemplate": {
 		"bot_token": {
 			"type": "string",
-			"description": "The secret token for your Telegram bot",
+			"description": "Your telegram bot token.\nLearn how to create one here: https://github.com/EniasCailliau/GirlfriendGPT/blob/main/docs/register-telegram-bot.md",
 			"default": null
 		},
 		"elevenlabs_api_key": {
