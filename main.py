@@ -43,6 +43,7 @@ def main():
                     "bot_token": "test",
                     "elevenlabs_voice_id": os.environ.get("ELEVENLABS_VOICE_ID"),
                     "elevenlabs_api_key": os.environ.get("ELEVENLABS_API_KEY"),
+                    "did_api_key": os.environ.get("DID_API_KEY"),
                 },
             ),
         )
@@ -56,9 +57,7 @@ def main():
 
         while True:
             print(f"----- Agent Run {count} -----")
-            if count > 1:
-                exit()
-            prompt = "Can you send me a video message?" # input(colored(f"Prompt: ", "blue"))
+            prompt = input(colored(f"Prompt: ", "blue"))
             run(
                 # client,
                 prompt=prompt,
