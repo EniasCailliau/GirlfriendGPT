@@ -16,7 +16,7 @@ __all__ = [
     "alix_earle",
     "jack_dawson",
     "jordan_belfort",
-    "get_personality"
+    "get_personality",
 ]
 
 

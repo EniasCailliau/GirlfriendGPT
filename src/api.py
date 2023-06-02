@@ -32,7 +32,8 @@ langchain.cache = None
 class GirlFriendAIConfig(TelegramBotConfig):
     bot_token: str = Field(
         description="Your telegram bot token.\nLearn how to create one here: "
-                    "https://github.com/EniasCailliau/GirlfriendGPT/blob/main/docs/register-telegram-bot.md")
+                    "https://github.com/EniasCailliau/GirlfriendGPT/blob/main/docs/register-telegram-bot.md"
+    )
     elevenlabs_api_key: str = Field(
         default="", description="Optional API KEY for ElevenLabs Voice Bot"
     )

@@ -15,6 +15,12 @@ UUID_PATTERN = re.compile(
 )
 
 
+class ChatMessage(Block):
+    def __init__(self, chat_id: str, **kwargs):
+        super().__init__(**kwargs)
+        self.set_chat_id(chat_id)
+
+
 def is_uuid(uuid_to_test: str, version: int = 4) -> bool:
     """Check a string to see if it is actually a UUID."""
     lowered = uuid_to_test.lower()
@@ -40,8 +46,7 @@ class LangChainAgentBot(TelegramBot):
         """Send a message to Telegram.
 
         Note: This is a private endpoint that requires authentication."""
-        message = Block(text=message)
-        message.set_chat_id(chat_id)  # TODO: chat_id part of __init__?
+        message = ChatMessage(text=message, chat_id=chat_id)
         self.telegram_transport.send([message], metadata={})
         return "ok"
 
@@ -60,28 +65,26 @@ class LangChainAgentBot(TelegramBot):
         chat_id = incoming_message.chat_id
         if hasattr(self.config, "chat_ids") and self.config.chat_ids:
             if chat_id not in self.config.chat_ids.split(","):
-                if hasattr(self, "get_memory") and len(self.get_memory(chat_id).buffer) > 10:
-                    message_1 = Block(
-                        text="Thanks for trying out SachaGPT!",
-                    )
-                    message_1.set_chat_id(chat_id)
-
-                    message_2 = Block(
-                        text="Please deploy your own version GirlfriendGPT to continue chatting.",
-                    )
-                    message_2.set_chat_id(chat_id)
-
-                    message_3 = Block(
-                        text="Learn how on: https://github.com/EniasCailliau/GirlfriendGPT/",
-                    )
-                    message_3.set_chat_id(chat_id)
-                    return [message_1, message_2, message_3]
+                if (
+                    hasattr(self, "get_memory")
+                    and len(self.get_memory(chat_id).buffer) > 10
+                ):
+                    return [
+                        ChatMessage(
+                            text="Thanks for trying out SachaGPT!", chat_id=chat_id
+                        ),
+                        ChatMessage(
+                            text="Please deploy your own version GirlfriendGPT to continue chatting.",
+                            chat_id=chat_id,
+                        ),
+                        ChatMessage(
+                            text="Learn how on: https://github.com/EniasCailliau/GirlfriendGPT/",
+                            chat_id=chat_id,
+                        ),
+                    ]
 
         if incoming_message.text == "/start":
-            message = Block(
-                text="New conversation started.",
-            )
-            message.set_chat_id(chat_id)
+            message = ChatMessage(text="New conversation started.", chat_id=chat_id)
             return [message]
 
         conversation = self.get_agent(
@@ -105,7 +108,7 @@ class LangChainAgentBot(TelegramBot):
         )
 
     def agent_output_to_chat_messages(
-            self, chat_id: str, response_messages: List[str]
+        self, chat_id: str, response_messages: List[str]
     ) -> List[Block]:
         """Transform the output of the Multi-Modal Agent into a list of ChatMessage objects.
 
@@ -124,13 +127,9 @@ class LangChainAgentBot(TelegramBot):
                 message.url = message.raw_data_url
 
             else:
-                message = Block(
-                    client=self.client,
+                message = ChatMessage(
                     text=response,
-                )
-                message.set_chat_id(
                     chat_id=chat_id,
                 )
-
             ret.append(message)
         return ret

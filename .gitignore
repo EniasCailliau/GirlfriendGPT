@@ -8,6 +8,8 @@
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
 
+*.conf
+
 # IPython
 profile_default/
 ipython_config.py
