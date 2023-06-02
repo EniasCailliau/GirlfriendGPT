@@ -1,3 +1,4 @@
+import logging
 import os
 import sys
 
@@ -9,6 +10,16 @@ from agent.base import ChatMessage
 from steamship import Steamship, SteamshipError, Block
 from termcolor import colored
 from api import GirlfriendGPT
+
+
+class LoggingDisabled:
+    """Context manager that turns off logging within context."""
+
+    def __enter__(self):
+        logging.disable(logging.CRITICAL)
+
+    def __exit__(self, exit_type, exit_value, exit_traceback):
+        logging.disable(logging.NOTSET)
 
 
 def show_results(response_messages: List[Block]):
@@ -53,8 +64,9 @@ def run_agent(agent, prompt: str) -> None:
 if __name__ == "__main__":
     # when running locally, we can use print statements to capture logs / info.
     # as a result, we will disable python logging to run. this will keep the output cleaner.
-    try:
-        main()
-    except SteamshipError as e:
-        print(colored("Aborting! ", "red"), end="")
-        print(f"There was an error encountered when running: {e}")
+    with LoggingDisabled():
+        try:
+            main()
+        except SteamshipError as e:
+            print(colored("Aborting! ", "red"), end="")
+            print(f"There was an error encountered when running: {e}")
