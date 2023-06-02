@@ -27,6 +27,7 @@ def main():
                 client=client,
                 config={
                     "bot_token": "test",
+                    "personality": "sacha",
                     "elevenlabs_voice_id": os.environ.get("ELEVENLABS_VOICE_ID"),
                     "elevenlabs_api_key": os.environ.get("ELEVENLABS_API_KEY"),
                 },
