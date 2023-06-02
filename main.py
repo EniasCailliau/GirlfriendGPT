@@ -1,11 +1,10 @@
 import os
 import sys
 
-from agent.base import ChatMessage
-
 sys.path.insert(0, "src")
 from functools import partial
 from typing import List
+from agent.base import ChatMessage
 
 from steamship import Steamship, SteamshipError, Block
 from termcolor import colored
