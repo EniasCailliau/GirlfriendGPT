@@ -186,17 +186,10 @@
 </a>
 
 <script>
-         let girlfriends;
          fetch('girlfriends.json')
                 .then(response => response.json())
-                .then(data => girlfriends = data)
-                .catch(error => console.error('Error:', error));
-
-       window.onload = function() {
-            const grid = document.getElementById('grid');
-
-
-       let row;
+                .then(girlfriends => {
+                let row;
         girlfriends.forEach(function(girlfriend, i) {
             // Create a new row for every 4 girlfriends
             if (i % 4 === 0) {
@@ -240,6 +233,14 @@
                 grid.insertBefore(iframe, row.nextSibling);
             };
         });
+                })
+                .catch(error => console.error('Error:', error));
+
+       window.onload = function() {
+            const grid = document.getElementById('grid');
+
+
+
         };
 
 

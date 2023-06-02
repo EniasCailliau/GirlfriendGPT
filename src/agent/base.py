@@ -19,9 +19,10 @@ MAX_FREE_MESSAGES = 3
 
 
 class ChatMessage(Block):
+    who: str = "bot"
+
     def __init__(self, chat_id: str, **kwargs):
         super().__init__(**kwargs)
-        self.set_public_data(True)
         self.set_chat_id(chat_id)
         self.set_chat_role(RoleTag.AGENT)
 
@@ -65,7 +66,7 @@ class LangChainAgentBot(TelegramBot):
             },
         )
 
-    def create_response(self, incoming_message: Block) -> Optional[List[Block]]:
+    def create_response(self, incoming_message: Block) -> Optional[List[ChatMessage]]:
         """Use the LLM to prepare the next response by appending the user input to the file and then generating."""
         chat_id = incoming_message.chat_id
         if hasattr(self.config, "chat_ids") and self.config.chat_ids:
@@ -114,7 +115,7 @@ class LangChainAgentBot(TelegramBot):
 
     def agent_output_to_chat_messages(
         self, chat_id: str, response_messages: List[str]
-    ) -> List[Block]:
+    ) -> List[ChatMessage]:
         """Transform the output of the Multi-Modal Agent into a list of ChatMessage objects.
 
         The response of a Multi-Modal Agent contains one or more:
@@ -126,11 +127,12 @@ class LangChainAgentBot(TelegramBot):
         ret = []
         for response in response_messages:
             if is_uuid(response):
-                message = Block.get(self.client, _id=response)
-                message.set_chat_id(chat_id)
-                message = message.set_public_data(True)
-                message.url = message.raw_data_url
+                block = Block.get(self.client, _id=response)
+                block.set_public_data(True)
+                message = ChatMessage(**block.dict(), chat_id=chat_id)
+                message.url = block.raw_data_url
                 message.set_chat_role(RoleTag.AGENT)
+                message.who = "bot"
             else:
                 message = ChatMessage(
                     text=response,
