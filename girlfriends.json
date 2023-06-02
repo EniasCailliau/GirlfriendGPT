@@ -1,0 +1,55 @@
+[
+  {
+    "name": "Sacha",
+    "description": "high energy mama of 1",
+    "backgroundImage": "docs/img/personalities/sacha.png",
+    "url": "https://github.com/EniasCailliau/GirlfriendGPT/blob/main/src/personalities/sacha.py",
+    "chat_src": "https://www.steamship.com/embed/chat?userHandle=enias&workspaceHandle=girlfriend-gpt-bot-2ii&instanceHandle=girlfriend-gpt-bot-2ii"
+  },
+  {
+    "name": "Sandra",
+    "description": "VC girlboss looking to chat about investing and tech trends",
+    "backgroundImage": "docs/img/personalities/sandra.png",
+    "url": "https://github.com/EniasCailliau/GirlfriendGPT/blob/main/src/personalities/sandra.py",
+    "chat_src": "https://www.steamship.com/embed/chat?userHandle=enias&workspaceHandle=girlfriend-gpt-bot-h32&instanceHandle=girlfriend-gpt-bot-h32"
+  },
+  {
+    "name": "John",
+    "description": "Coming soon....",
+    "backgroundImage": "docs/img/personalities/john.jpeg",
+    "url": "https://github.com/EniasCailliau/GirlfriendGPT/tree/main#contributing"
+  },
+  {
+    "name": "Angele",
+    "description": "Mother who loves to chat GenZ and mother-issues.",
+    "backgroundImage": "docs/img/personalities/angele.png",
+    "url": "https://github.com/EniasCailliau/GirlfriendGPT/blob/main/src/personalities/angele.py",
+    "chat_src": "https://www.steamship.com/embed/chat?userHandle=enias&workspaceHandle=girlfriend-gpt-bot-aa7&instanceHandle=girlfriend-gpt-bot-aa7"
+  },
+  {
+    "name": "Makima",
+    "description": "Charming, Enigmatic friend looking for thought-provoking discussions.",
+    "backgroundImage": "docs/img/personalities/makima.png",
+    "url": "https://github.com/EniasCailliau/GirlfriendGPT/blob/main/src/personalities/angele.py",
+    "chat_src": "https://www.steamship.com/embed/chat?userHandle=enias&workspaceHandle=girlfriend-gpt-bot-e11&instanceHandle=girlfriend-gpt-bot-e11"
+  },
+  {
+    "name": "Alex",
+    "description": "Coming soon....",
+    "backgroundImage": "docs/img/personalities/alex.png",
+    "url": "https://github.com/EniasCailliau/GirlfriendGPT/tree/main#contributing"
+  },
+  {
+    "name": "Luna",
+    "description": "Kind, bubbly traveler",
+    "backgroundImage": "docs/img/personalities/luna.jpeg",
+    "url": "https://github.com/EniasCailliau/GirlfriendGPT/blob/main/src/personalities/luna.py",
+    "chat_src": "https://www.steamship.com/embed/chat?userHandle=enias&workspaceHandle=girlfriend-gpt-bot-e06&instanceHandle=girlfriend-gpt-bot-e06"
+  },
+  {
+    "name": "Dinsey",
+    "description": "Coming soon....",
+    "backgroundImage": "docs/img/personalities/dinsey.jpeg",
+    "url": "https://github.com/EniasCailliau/GirlfriendGPT/tree/main#contributing"
+  }
+]

@@ -7,6 +7,7 @@ from typing import List, Optional
 from langchain.agents import AgentExecutor
 from langchain.tools import Tool
 from steamship import Block
+from steamship.data.tags.tag_constants import RoleTag
 from steamship.experimental.package_starters.telegram_bot import TelegramBot
 from steamship.invocable import post
 
@@ -14,11 +15,15 @@ UUID_PATTERN = re.compile(
     r"([0-9A-Za-z]{8}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{12})"
 )
 
+MAX_FREE_MESSAGES = 6
+
 
 class ChatMessage(Block):
     def __init__(self, chat_id: str, **kwargs):
         super().__init__(**kwargs)
+        self.set_public_data(True)
         self.set_chat_id(chat_id)
+        self.set_chat_role(RoleTag.AGENT)
 
 
 def is_uuid(uuid_to_test: str, version: int = 4) -> bool:
@@ -67,7 +72,7 @@ class LangChainAgentBot(TelegramBot):
             if chat_id not in self.config.chat_ids.split(","):
                 if (
                     hasattr(self, "get_memory")
-                    and len(self.get_memory(chat_id).buffer) > 10
+                    and len(self.get_memory(chat_id).buffer) > MAX_FREE_MESSAGES
                 ):
                     return [
                         ChatMessage(
@@ -125,7 +130,7 @@ class LangChainAgentBot(TelegramBot):
                 message.set_chat_id(chat_id)
                 message = message.set_public_data(True)
                 message.url = message.raw_data_url
-
+                message.set_chat_role(RoleTag.AGENT)
             else:
                 message = ChatMessage(
                     text=response,

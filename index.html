@@ -30,7 +30,7 @@
             50% { opacity: 0.3; }
         }
 
-     .grid {
+        .row {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             grid-gap: 10px;
@@ -46,6 +46,7 @@
             color: #000;
             position: relative;
             overflow: hidden;
+
         }
 
         .card::before {
@@ -120,19 +121,31 @@
     font-size: 1.2em;
 }
 
+@media screen and (min-width: 1024px) {
+    body {
+        padding-left: 20%;
+        padding-right: 20%;
+    }
+}
+
+
+
+
+
 
     </style>
 
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-J780NZZD4N"></script>
-<script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-J780NZZD4N"></script>
+    <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
   gtag('config', 'G-J780NZZD4N');
-</script>
-    
+
+    </script>
+
 </head>
 
 <body>
@@ -150,7 +163,7 @@
 <div class="subscription">
     <h2>Subscribe for Updates</h2>
     <p>I'm posting updates on Twitter every day.</p>
-        <p><a Click here</a> to subscribe.</p>
+    <p><a Click here</a> to subscribe.</p>
 
 </div>
 
@@ -158,7 +171,8 @@
     <h2>Contribute a Personality and Win!</h2>
     <p>We're looking for new personalities for GirlfriendGPT.
         If your submission is chosen as the best, you could win $100!
-        Click <a href="https://github.com/EniasCailliau/GirlfriendGPT/tree/main#contributing">here</a> to get started.</p>
+        Click <a href="https://github.com/EniasCailliau/GirlfriendGPT/tree/main#contributing">here</a> to get started.
+    </p>
 </div>
 
 
@@ -170,46 +184,65 @@
 </a>
 
 <script>
-         const girlfriends = [
-            { name: 'Sacha', description: 'high energy mama of 1', backgroundImage: 'docs/img/personalities/sacha.png', url: 'https://github.com/EniasCailliau/GirlfriendGPT/blob/main/src/personalities/sacha.py' },
-            { name: 'Sandra', description: 'VC girlboss looking to chat about investing and tech trends', backgroundImage: 'docs/img/personalities/sandra.png', url: 'https://github.com/EniasCailliau/GirlfriendGPT/blob/main/src/personalities/sandra.py' },
-            { name: 'John', description: 'Coming soon....', backgroundImage: 'docs/img/personalities/john.jpeg', url: 'https://github.com/EniasCailliau/GirlfriendGPT/tree/main#contributing' },
-            { name: 'Angele', description: 'Mother who loves to chat GenZ and mother-issues.', backgroundImage: 'docs/img/personalities/angele.png', url: 'https://github.com/EniasCailliau/GirlfriendGPT/blob/main/src/personalities/angele.py' },
-            { name: 'Makima', description: 'Charming, Enigmatic friend looking for thought-provoking discussions.', backgroundImage: 'docs/img/personalities/makima.png', url: 'https://github.com/EniasCailliau/GirlfriendGPT/blob/main/src/personalities/angele.py' },
-            { name: 'Alex', description: 'Coming soon....', backgroundImage: 'docs/img/personalities/alex.png', url: 'https://github.com/EniasCailliau/GirlfriendGPT/tree/main#contributing' },
-            { name: 'Luna', description: 'Kind, bubbly traveler', backgroundImage: 'docs/img/personalities/luna.jpeg', url: 'https://github.com/EniasCailliau/GirlfriendGPT/blob/main/src/personalities/luna.py' },
-            { name: 'Dinsey', description: 'Coming soon....', backgroundImage: 'docs/img/personalities/dinsey.jpeg', url: 'https://github.com/EniasCailliau/GirlfriendGPT/tree/main#contributing' },
-
-        ];
+         let girlfriends;
+         fetch('girlfriends.json')
+                .then(response => response.json())
+                .then(data => girlfriends = data)
+                .catch(error => console.error('Error:', error));
 
        window.onload = function() {
             const grid = document.getElementById('grid');
 
-           girlfriends.forEach(function(girlfriend) {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.style.backgroundImage = `url(${girlfriend.backgroundImage})`;
 
-                const cardContent = document.createElement('div');
-                cardContent.className = 'card-content';
+       let row;
+        girlfriends.forEach(function(girlfriend, i) {
+            // Create a new row for every 4 girlfriends
+            if (i % 4 === 0) {
+                row = document.createElement('div');
+                row.className = 'row';
+                grid.appendChild(row);
+            }
 
-                const name = document.createElement('h2');
-                name.innerText = girlfriend.name;
-                cardContent.appendChild(name);
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.style.backgroundImage = `url(${girlfriend.backgroundImage})`;
 
-                const description = document.createElement('p');
-                description.innerText = girlfriend.description;
-                cardContent.appendChild(description);
+            const cardContent = document.createElement('div');
+            cardContent.className = 'card-content';
 
-                card.appendChild(cardContent);
-                card.onclick = function() {
-                    window.location.href = girlfriend.url;
-                };
-                grid.appendChild(card);
-            });
+            const name = document.createElement('h2');
+            name.innerText = girlfriend.name;
+            cardContent.appendChild(name);
 
+            const description = document.createElement('p');
+            description.innerText = girlfriend.description;
+            cardContent.appendChild(description);
+
+            card.appendChild(cardContent);
+            row.appendChild(card);
+
+            card.onclick = function() {
+                // Remove any iframes from previous clicks
+                const allIframes = grid.querySelectorAll('.iframe');
+                allIframes.forEach(iframe => grid.removeChild(iframe));
+
+                // Create the iframe
+                const iframe = document.createElement('iframe');
+                iframe.src = girlfriend.chat_src;
+                iframe.width = "100%";
+                iframe.height = "700";
+                iframe.frameBorder = "0";
+                iframe.className = 'iframe';
+
+                // Insert the iframe directly underneath the clicked row
+                grid.insertBefore(iframe, row.nextSibling);
+            };
+        });
         };
 
+
 </script>
+
+
 
 </body>

@@ -1,3 +1,5 @@
+from enum import Enum
+
 from .alix_earle import alix_earle
 from .angele import angele
 from .jack_dawson import jack_dawson
@@ -20,17 +22,29 @@ __all__ = [
 ]
 
 
-def get_personality(name: str):
+class Personality(str, Enum):
+    SACHA = "sacha"
+    LUNA = "luna"
+    ANGELE = "angele"
+    MAKIMA = "makima"
+    SANDRA = "sandra"
+    ALIX_EARLE = "alix_earle"
+    JACK_DAWSON = "jack_dawson"
+    JORDON_BELFORT = "jordan_belfort"
+
+
+def get_personality(personality: str):
     try:
+        personality = Personality(personality)
         return {
-            "Sacha": sacha,
-            "Luna": luna,
-            "Angèle": angele,
-            "Makima": makima,
-            "Sandra": sandra,
-            "Alix Earle": alix_earle,
-            "Jack Dawson": jack_dawson,
-            "Jordan Belfort": jordan_belfort,
-        }[name]
+            "sacha": sacha,
+            "luna": luna,
+            "angele": angele,
+            "makima": makima,
+            "sandra": sandra,
+            "alix_earle": alix_earle,
+            "jack_dawson": jack_dawson,
+            "jordan_belfort": jordan_belfort,
+        }[personality.value]
     except Exception:
-        raise Exception("The personality you selected does not exist!")
+        raise Exception(f"The personality you selected ({personality}) does not exist!")
