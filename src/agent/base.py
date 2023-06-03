@@ -60,7 +60,7 @@ class LangChainAgentBot(TelegramBot):
         chat_id = incoming_message.chat_id
         if hasattr(self.config, "chat_ids") and self.config.chat_ids:
             if chat_id not in self.config.chat_ids.split(","):
-                if hasattr(self, "get_memory") and len(self.get_memory(chat_id).buffer) > 0:
+                if hasattr(self, "get_memory") and len(self.get_memory(chat_id).buffer) > 10:
                     message_1 = Block(
                         text="Thanks for trying out KarenGPT!",
                     )
