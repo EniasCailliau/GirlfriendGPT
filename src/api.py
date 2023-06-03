@@ -17,7 +17,7 @@ from agent.base import LangChainAgentBot
 from agent.tools.search import SearchTool
 from agent.tools.selfie import SelfieTool
 from agent.tools.speech import GenerateSpeechTool
-from personalities import get_personality, Personality
+from personalities import get_personality
 from prompts import SUFFIX, FORMAT_INSTRUCTIONS, PERSONALITY_PROMPT
 
 MODEL_NAME = "gpt-4"  # or "gpt-4"
@@ -31,7 +31,7 @@ langchain.cache = None
 class GirlFriendAIConfig(TelegramBotConfig):
     bot_token: str = Field(
         description="Your telegram bot token.\nLearn how to create one here: "
-        "https://github.com/EniasCailliau/GirlfriendGPT/blob/main/docs/register-telegram-bot.md"
+                    "https://github.com/EniasCailliau/GirlfriendGPT/blob/main/docs/register-telegram-bot.md"
     )
     elevenlabs_api_key: str = Field(
         default="", description="Optional API KEY for ElevenLabs Voice Bot"
@@ -42,14 +42,14 @@ class GirlFriendAIConfig(TelegramBotConfig):
     chat_ids: str = Field(
         default="", description="Comma separated list of whitelisted chat_id's"
     )
-    personality: Personality = Field(
+    personality: str = Field(
         description="The personality you want to deploy. Pick one of the personalities listed here: "
-        "https://github.com/EniasCailliau/GirlfriendGPT/tree/main/src/personalities"
+                    "https://github.com/EniasCailliau/GirlfriendGPT/tree/main/src/personalities"
     )
     use_gpt4: bool = Field(
         True,
         description="If True, use GPT-4. Use GPT-3.5 if False. "
-        "GPT-4 generates better responses at higher cost and latency.",
+                    "GPT-4 generates better responses at higher cost and latency.",
     )
 
 
@@ -83,7 +83,7 @@ class GirlfriendGPT(LangChainAgentBot, TelegramBot):
                 # "output_parser": MultiModalOutputParser(ConvoOutputParser()),
                 "prefix": PERSONALITY_PROMPT.format(
                     personality=get_personality(
-                        self.config.personality or Personality.SACHA.value
+                        self.config.personality or PersonalityName.SACHA.value
                     )
                 ),
                 "suffix": SUFFIX,
