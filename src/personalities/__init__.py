@@ -1,7 +1,8 @@
 from pathlib import Path
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 from pydantic import BaseModel
+from urllib3.util import Url
 
 dir_path = Path(__file__).parent
 
@@ -14,6 +15,7 @@ class Personality(BaseModel):
     byline: str
     identity: List[str]
     behavior: List[str]
+    profile_image: Optional[str]
 
 
 personalities: Dict[str, Personality] = {}

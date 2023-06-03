@@ -129,6 +129,13 @@
 }
 
 
+.iframe-wrapper {
+    overflow: hidden;
+}
+
+.card-content-selected {
+    opacity: 1 !important;
+}
 
 
 
@@ -143,6 +150,8 @@
   gtag('js', new Date());
 
   gtag('config', 'G-J780NZZD4N');
+
+
 
     </script>
 
@@ -176,8 +185,6 @@
 </div>
 
 
-
-
 <!-- This is the start of the projects section -->
 <a href="https://www.github.com/EniasCailliau/GirlfriendGPT">
     <div class="about">
@@ -186,66 +193,93 @@
 </a>
 
 <script>
-         fetch('girlfriends.json')
-                .then(response => response.json())
-                .then(girlfriends => {
-                let row;
-        girlfriends.forEach(function(girlfriend, i) {
-            // Create a new row for every 4 girlfriends
-            if (i % 4 === 0) {
-                row = document.createElement('div');
-                row.className = 'row';
-                grid.appendChild(row);
-            }
+fetch('girlfriends.json')
+    .then(response => response.json())
+    .then(girlfriends => {
+    let row;
+    girlfriends.forEach(function(girlfriend, i) {
+        if (i % 4 === 0) {
+            row = document.createElement('div');
+            row.className = 'row';
+            grid.appendChild(row);
+        }
 
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.style.backgroundImage = `url(${girlfriend.backgroundImage})`;
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.style.backgroundImage = `url(${girlfriend.profile_image})`;
 
-            const cardContent = document.createElement('div');
-            cardContent.className = 'card-content';
+        const cardContent = document.createElement('div');
+        cardContent.className = 'card-content';
 
-            const name = document.createElement('h2');
-            name.innerText = girlfriend.name;
-            cardContent.appendChild(name);
+        const name = document.createElement('h2');
+        name.innerText = girlfriend.name;
+        cardContent.appendChild(name);
 
-            const description = document.createElement('p');
-            description.innerText = girlfriend.description;
-            cardContent.appendChild(description);
+        const description = document.createElement('p');
+        description.innerText = girlfriend.description;
+        cardContent.appendChild(description);
 
-            card.appendChild(cardContent);
-            row.appendChild(card);
+        card.appendChild(cardContent);
+        row.appendChild(card);
 
-            card.onclick = function() {
-                // Remove any iframes from previous clicks
-                const allIframes = grid.querySelectorAll('.iframe');
-                allIframes.forEach(iframe => grid.removeChild(iframe));
+        let cardIsOpen = false;
+        let cardIframeWrapper;
 
-                // Create the iframe
+        card.onclick = function() {
+            const clickedRow = this.parentNode;
+            const allCardContents = grid.querySelectorAll('.card-content');
+            allCardContents.forEach(cardContent => {
+                cardContent.classList.remove('card-content-selected');
+            });
+
+            const allIframeWrappers = grid.querySelectorAll('.iframe-wrapper');
+            allIframeWrappers.forEach(iframeWrapper => {
+                if (iframeWrapper !== cardIframeWrapper) {
+                    iframeWrapper.style.height = '0px';
+                    setTimeout(function() {
+                        grid.removeChild(iframeWrapper);
+                    }, 2000);
+                }
+            });
+
+            if (cardIsOpen && cardIframeWrapper) {
+                cardIframeWrapper.style.height = '0px';
+                setTimeout(function() {
+                    grid.removeChild(cardIframeWrapper);
+                    cardIsOpen = false;  // Reset cardIsOpen to false here
+                }, 2000);
+            } else {
+                cardContent.classList.add('card-content-selected');
+
+                const iframeWrapper = document.createElement('div');
+                iframeWrapper.style.height = '0px';
+                iframeWrapper.style.transition = 'height 2s';
+                iframeWrapper.className = 'iframe-wrapper';
+
                 const iframe = document.createElement('iframe');
                 iframe.src = girlfriend.chat_src;
                 iframe.width = "100%";
                 iframe.height = "700";
                 iframe.frameBorder = "0";
-                iframe.className = 'iframe';
 
-                // Insert the iframe directly underneath the clicked row
-                grid.insertBefore(iframe, row.nextSibling);
-            };
-        });
-                })
-                .catch(error => console.error('Error:', error));
+                iframeWrapper.appendChild(iframe);
+                grid.insertBefore(iframeWrapper, clickedRow.nextSibling);
 
-       window.onload = function() {
-            const grid = document.getElementById('grid');
+                setTimeout(function() {
+                    iframeWrapper.style.height = '700px';
+                }, 0);
 
-
-
+                cardIsOpen = true;
+                cardIframeWrapper = iframeWrapper;
+            }
         };
+    });
+})
+.catch(error => console.error('Error:', error));
+
 
 
 </script>
-
 
 
 </body>
