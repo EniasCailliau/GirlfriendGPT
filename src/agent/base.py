@@ -72,8 +72,8 @@ class LangChainAgentBot(TelegramBot):
         if hasattr(self.config, "chat_ids") and self.config.chat_ids:
             if chat_id not in self.config.chat_ids.split(","):
                 if (
-                    hasattr(self, "get_memory")
-                    and len(self.get_memory(chat_id).buffer) > MAX_FREE_MESSAGES
+                        hasattr(self, "get_memory")
+                        and len(self.get_memory(chat_id).buffer) > MAX_FREE_MESSAGES
                 ):
                     return [
                         ChatMessage(
@@ -114,7 +114,7 @@ class LangChainAgentBot(TelegramBot):
         )
 
     def agent_output_to_chat_messages(
-        self, chat_id: str, response_messages: List[str]
+            self, chat_id: str, response_messages: List[str]
     ) -> List[ChatMessage]:
         """Transform the output of the Multi-Modal Agent into a list of ChatMessage objects.
 
@@ -129,7 +129,7 @@ class LangChainAgentBot(TelegramBot):
             if is_uuid(response):
                 block = Block.get(self.client, _id=response)
                 block.set_public_data(True)
-                message = ChatMessage(**block.dict(), chat_id=chat_id)
+                message = ChatMessage(**block.dict(), client=self.client, chat_id=chat_id)
                 message.url = block.raw_data_url
                 message.set_chat_role(RoleTag.AGENT)
                 message.who = "bot"
