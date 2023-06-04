@@ -13,7 +13,7 @@ config = json.load(Path("sacha.conf").open())
 girlfriends = []
 workspace = str(uuid1())
 for name, personality in personalities.items():
-    config["personality"] = name.title()
+    config["personality"] = name
     instance = _create_instance(workspace=workspace,
                                 instance_handle=name,
                                 config=json.dumps(config))

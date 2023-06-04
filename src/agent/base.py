@@ -15,7 +15,7 @@ UUID_PATTERN = re.compile(
     r"([0-9A-Za-z]{8}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{12})"
 )
 
-MAX_FREE_MESSAGES = 3
+MAX_FREE_MESSAGES = 10
 
 
 class ChatMessage(Block):

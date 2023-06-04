@@ -83,7 +83,7 @@ class GirlfriendGPT(LangChainAgentBot, TelegramBot):
                 # "output_parser": MultiModalOutputParser(ConvoOutputParser()),
                 "prefix": PERSONALITY_PROMPT.format(
                     personality=get_personality(
-                        self.config.personality or PersonalityName.SACHA.value
+                        self.config.personality or "sacha"
                     )
                 ),
                 "suffix": SUFFIX,

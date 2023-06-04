@@ -254,17 +254,11 @@ function countdownTimer(endtime) {
     return re.test(email);
   }
 
-  async function sha256(email) {
-  const msgUint8 = new TextEncoder().encode(email);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-  return hashHex;
-}
-
-async function getHashedEmail(email) {
-  const hash = await sha256(email);
-  return hash.replace(/[8-9a-f]/g, '_').replace(/[4-7]/g, '-').replace(/[0-3]/g, 'a');
+function generateRandomHash() {
+    let array = new Uint32Array(10);
+    window.crypto.getRandomValues(array);
+    let hash = Array.from(array, dec => ('0' + dec.toString(16)).substr(-2)).join('');
+    return hash
 }
 
 fetch('girlfriends.json')
@@ -306,17 +300,12 @@ fetch('girlfriends.json')
                 cardContent.classList.remove('card-content-selected');
             });
 
-           let email = localStorage.getItem("email");
+           let chatId = localStorage.getItem("chatId");
 
-            if (email === null) {
-                do {
-                    email = prompt("Please enter your email:", "");
-                } while (!validateEmail(email));
-
-                localStorage.setItem("email", email);
+            if (chatId === null) {
+                chatId = generateRandomHash()
+                localStorage.setItem("chatId", chatId);
             }
-
-            const hash = await getHashedEmail(email);
 
             const allIframeWrappers = grid.querySelectorAll('.iframe-wrapper');
             allIframeWrappers.forEach(iframeWrapper => {
@@ -345,7 +334,7 @@ fetch('girlfriends.json')
                 iframeWrapper.className = 'iframe-wrapper';
 
                 const iframe = document.createElement('iframe');
-                iframe.src = girlfriend.chat_src  + "&chat_id=" + hash;
+                iframe.src = girlfriend.chat_src  + "&chat_id=" + chatId;
                 iframe.width = "100%";
                 iframe.height = "700";
                 iframe.frameBorder = "0";
