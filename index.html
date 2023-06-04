@@ -71,6 +71,8 @@
             color: #fff; /* This changes the text color to white */
         }
 
+
+
         .card:hover .card-content {
             opacity: 1;
         }
@@ -85,6 +87,11 @@
 
         .about {
             background-color: yellow;
+            padding: 0px;
+        }
+
+         .competition {
+            background-color: orange;
             padding: 0px;
         }
 
@@ -141,6 +148,11 @@
 
 
 
+
+
+
+
+
     </style>
 
     <!-- Google tag (gtag.js) -->
@@ -155,6 +167,11 @@
 
 
 
+
+
+
+
+
     </script>
 
 </head>
@@ -163,9 +180,17 @@
 <!-- This is the start of the "About" section -->
 <div class="about">
     <h1>GirlfriendGPT</h1>
-    <h2>A AI girlfriend experiment by <a Enias Cailliau</a></h2>
+    <h2>The OSS AI companion store &#x1F44B;
+ <a Enias Cailliau</a></h2>
 </div>
 
+<div class="competition">
+    <h2>&#x1F4B0; Hey there! Ready to win $100 while having fun?</h2>
+    <p>We're kick-starting the FIRST open-source AI companion playstore, and here's your shot to be part of this exciting journey!</p>
+    <p>Got a cool idea for a personality? Sassy, brainy, sexy, mysterious... anything goes! The best part? The most kick-ass personality will pocket a sweet $100. So why wait?</p>
+    <p><strong><a href="https://airtable.com/shrZB2X6jEW2BdbpK" target="_blank">Submit your awesome personality right here, right now!</a></strong></p>
+    <p id="countdown">Hurry up, the clock is ticking! Submissions close in:</p>
+</div>
 
 <h1>Personalities:</h1>
 
@@ -195,6 +220,53 @@
 </a>
 
 <script>
+
+function countdownTimer(endtime) {
+            var timer = setInterval(function() {
+                var t = Date.parse(endtime) - Date.parse(new Date());
+                var seconds = Math.floor((t / 1000) % 60);
+                var minutes = Math.floor((t / 1000 / 60) % 60);
+                var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+                var days = Math.floor(t / (1000 * 60 * 60 * 24));
+                document.getElementById("countdown").innerHTML = days + ' days ' +
+                    hours + ' hours ' +
+                    minutes + ' minutes and ' +
+                    seconds + ' seconds remaining until winner is selected.';
+                if (t <= 0) {
+                    clearInterval(timer);
+                    document.getElementById("countdown").innerHTML = 'Competition Time!';
+                }
+            }, 1000);
+        }
+
+
+        window.onload = function() {
+            // Set the date we're counting down to (next Friday 8PM PST)
+        var countdownEndDate = new Date();
+            countdownEndDate.setDate(countdownEndDate.getDate() + (10 - countdownEndDate.getDay()) % 7);
+            countdownEndDate.setHours(20, 0, 0, 0);
+            countdownEndDate = countdownEndDate.toString().replace(/GMT.*/, 'PST');
+            countdownTimer(countdownEndDate);
+        }
+
+  function validateEmail(email) {
+    const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+  }
+
+  async function sha256(email) {
+  const msgUint8 = new TextEncoder().encode(email);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return hashHex;
+}
+
+async function getHashedEmail(email) {
+  const hash = await sha256(email);
+  return hash.replace(/[8-9a-f]/g, '_').replace(/[4-7]/g, '-').replace(/[0-3]/g, 'a');
+}
+
 fetch('girlfriends.json')
     .then(response => response.json())
     .then(girlfriends => {
@@ -227,12 +299,24 @@ fetch('girlfriends.json')
         let cardIsOpen = false;
         let cardIframeWrapper;
 
-        card.onclick = function() {
+        card.onclick = async function() {
             const clickedRow = this.parentNode;
             const allCardContents = grid.querySelectorAll('.card-content');
             allCardContents.forEach(cardContent => {
                 cardContent.classList.remove('card-content-selected');
             });
+
+           let email = localStorage.getItem("email");
+
+            if (email === null) {
+                do {
+                    email = prompt("Please enter your email:", "");
+                } while (!validateEmail(email));
+
+                localStorage.setItem("email", email);
+            }
+
+            const hash = await getHashedEmail(email);
 
             const allIframeWrappers = grid.querySelectorAll('.iframe-wrapper');
             allIframeWrappers.forEach(iframeWrapper => {
@@ -254,12 +338,14 @@ fetch('girlfriends.json')
                 cardContent.classList.add('card-content-selected');
 
                 const iframeWrapper = document.createElement('div');
+                iframeWrapper.style.padding = '10px';
                 iframeWrapper.style.height = '0px';
+
                 iframeWrapper.style.transition = 'height 2s';
                 iframeWrapper.className = 'iframe-wrapper';
 
                 const iframe = document.createElement('iframe');
-                iframe.src = girlfriend.chat_src;
+                iframe.src = girlfriend.chat_src  + "&chat_id=" + hash;
                 iframe.width = "100%";
                 iframe.height = "700";
                 iframe.frameBorder = "0";
@@ -278,6 +364,11 @@ fetch('girlfriends.json')
     });
 })
 .catch(error => console.error('Error:', error));
+
+
+
+
+
 
 
 </script>
