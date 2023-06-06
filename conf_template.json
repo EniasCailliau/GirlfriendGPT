@@ -1,0 +1,6 @@
+{
+  "bot_token": "YOUR_BOT_TOKEN",
+  "elevenlabs_api_key": "",
+  "elevenlabs_voice_id": "",
+  "chat_ids": ""
+}
