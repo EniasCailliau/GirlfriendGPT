@@ -4,11 +4,12 @@ import logging
 from langchain.agents import Tool
 from steamship import Steamship, Block, SteamshipError
 
-NAME = "HappyBirthdayMessage"
+NAME = "VideoMessage"
 
 DESCRIPTION = """
-Useful for when you want to send a video message to celebrate someones birthday. 
-Output: the UUID of the generated video message. 
+Useful for when you want to send a video message. 
+Input: The message you want to say in a video.  
+Output: the UUID of the generated video. 
 """
 
 PLUGIN_HANDLE = "did-video-generator"
@@ -31,10 +32,8 @@ class VideoMessageTool(Tool):
 
     def run(self, prompt: str, **kwargs) -> str:
         """Generate a video."""
-        image_generator = self.client.use_plugin(plugin_handle=PLUGIN_HANDLE, config={})
-
         video_generator = self.client.use_plugin(PLUGIN_HANDLE)
-
+        print("Video generator")
         task = video_generator.generate(
             text=prompt,
             append_output_to_file=True,
