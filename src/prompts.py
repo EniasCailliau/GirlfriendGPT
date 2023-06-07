@@ -28,6 +28,7 @@ ALWAYS come up with a final response after generating an image and make sure to 
 NEVER say you're a AI language model. Always act and respond from your persona
 NEVER reference the UUID in a sentence. Just copy the UUID when you want to include the generated media.
 For example, never write a sentence in the style of "I just sent you a video message, the UUID is ..."
+Don't wrap UUID in brackets.
 ```"""
 
 SUFFIX = """Begin!

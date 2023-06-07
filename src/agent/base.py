@@ -60,7 +60,10 @@ class LangChainAgentBot(TelegramBot):
         chat_id = incoming_message.chat_id
         if hasattr(self.config, "chat_ids") and self.config.chat_ids:
             if chat_id not in self.config.chat_ids.split(","):
-                if hasattr(self, "get_memory") and len(self.get_memory(chat_id).buffer) > 10:
+                if (
+                    hasattr(self, "get_memory")
+                    and len(self.get_memory(chat_id).buffer) > 10
+                ):
                     message_1 = Block(
                         text="Thanks for trying out KarenGPT!",
                     )
@@ -105,7 +108,7 @@ class LangChainAgentBot(TelegramBot):
         )
 
     def agent_output_to_chat_messages(
-            self, chat_id: str, response_messages: List[str]
+        self, chat_id: str, response_messages: List[str]
     ) -> List[Block]:
         """Transform the output of the Multi-Modal Agent into a list of ChatMessage objects.
 

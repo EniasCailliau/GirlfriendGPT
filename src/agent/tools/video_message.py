@@ -1,29 +1,27 @@
 """Tool for generating images."""
 import logging
-import time
 
-import requests
 from langchain.agents import Tool
-from steamship import Steamship, Block, MimeTypes, File
+from steamship import Steamship, Block, SteamshipError
 
-NAME = "VideoMessage"
+NAME = "HappyBirthdayMessage"
 
 DESCRIPTION = """
-Useful for when you want to send a video message to answer a question. 
-Input: The message you want to say in a video message.  
+Useful for when you want to send a video message to celebrate someones birthday. 
 Output: the UUID of the generated video message. 
 """
+
+PLUGIN_HANDLE = "did-video-generator"
 
 
 class VideoMessageTool(Tool):
     """Tool used to generate images from a text-prompt."""
 
     client: Steamship
-    api_key: str
 
-    def __init__(self, client: Steamship, api_key: str):
+    def __init__(self, client: Steamship):
         super().__init__(
-            name=NAME, func=self.run, description=DESCRIPTION, client=client, api_key=api_key
+            name=NAME, func=self.run, description=DESCRIPTION, client=client
         )
 
     @property
@@ -33,53 +31,45 @@ class VideoMessageTool(Tool):
 
     def run(self, prompt: str, **kwargs) -> str:
         """Generate a video."""
-        headers = {
-            'Authorization': f"Basic {self.api_key}"
-        }
-        response = requests.post("https://api.d-id.com/talks",
-                                 json={
-                                     "source_url": "https://raw.githubusercontent.com/EniasCailliau/GirlfriendGPT/main/docs/img/personalities/sneako.png",
-                                     "script": {
-                                         "type": "text",
-                                         "input": prompt,
-                                         "provider": {
-                                             "type": "microsoft",
-                                             "voice_id": "en-US-AriaNeural",
-                                             "voice_config": {
-                                                 "style": "Chat"
-                                             }
-                                         }
-                                     },
-                                     "config": {
-                                         "driver_expressions": {
-                                             "expressions": [
-                                                 {
-                                                     "start_frame": 0,
-                                                     "expression": "happy",
-                                                     "intensity": 1.0
-                                                 }
-                                             ]
-                                         },
-                                         "stitch": True
-                                     }
+        image_generator = self.client.use_plugin(plugin_handle=PLUGIN_HANDLE, config={})
 
-                                 },
-                                 headers=headers).json()
+        video_generator = self.client.use_plugin(PLUGIN_HANDLE)
 
-        talk_id = response["id"]
-        status = response["status"]
-
-        while status != "done":
-            response = requests.get(f"https://api.d-id.com/talks/{talk_id}", headers=headers).json()
-            status = response["status"]
-            time.sleep(1)
-
-        f = File.create(self.client, content="test")
-        blocks = [Block.create(client=self.client,
-                               file_id=f.id,
-                               url=response["result_url"],
-                               mime_type=MimeTypes.MP4_VIDEO)]
+        task = video_generator.generate(
+            text=prompt,
+            append_output_to_file=True,
+            options={
+                "source_url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/617d79ac-2201-4f06-b43e-195f78a5fbfb/width=1472/3.1-066.jpeg",
+                "stitch": True,
+                "provider": {
+                    "type": "microsoft",
+                    "voice_id": "en-US-AshleyNeural",
+                    "voice_config": {"style": "Default"},
+                    "expressions": [
+                        {"start_frame": 0, "expression": "surprise", "intensity": 1.0},
+                        {"start_frame": 50, "expression": "happy", "intensity": 1.0},
+                        {"start_frame": 100, "expression": "serious", "intensity": 0.6},
+                        {"start_frame": 150, "expression": "neutral", "intensity": 1.0},
+                    ],
+                },
+                "transition_frames": 20,
+            },
+        )
+        task.wait(retry_delay_s=3)
+        blocks = task.output.blocks
         logging.info(f"[{self.name}] got back {len(blocks)} blocks")
         if len(blocks) > 0:
             logging.info(f"[{self.name}] image size: {len(blocks[0].raw())}")
-        return blocks[0].id
+            return blocks[0].id
+        raise SteamshipError(f"[{self.name}] Tool unable to generate image!")
+
+
+if __name__ == "__main__":
+    with Steamship.temporary_workspace() as client:
+        tool = VideoMessageTool(client=client)
+        id = tool.run(
+            "Happy birthday to you, I hope all your dreams come true! and when your blowing out your candles, I hope you think about me too!! Happy birthday Enias, Founding father of GPT girlfriend.online!"
+        )
+        b = Block.get(client=client, _id=id)
+        b.set_public_data(True)
+        print(b.raw_data_url)

@@ -15,8 +15,6 @@ from steamship_langchain.memory import ChatMessageHistory
 
 from agent.base import LangChainAgentBot
 from agent.tools.search import SearchTool
-from agent.tools.selfie import SelfieTool
-from agent.tools.speech import GenerateSpeechTool
 from agent.tools.video_message import VideoMessageTool
 from personalities import get_personality
 from prompts import SUFFIX, FORMAT_INSTRUCTIONS, PERSONALITY_PROMPT
@@ -24,7 +22,7 @@ from prompts import SUFFIX, FORMAT_INSTRUCTIONS, PERSONALITY_PROMPT
 MODEL_NAME = "gpt-4"  # or "gpt-4"
 TEMPERATURE = 0.7
 VERBOSE = True
-PERSONALITY = "Sacha"
+PERSONALITY = "Luna"
 MEMORY_WINDOW_SIZE = 5
 
 langchain.cache = None
@@ -33,7 +31,8 @@ langchain.cache = None
 class GirlFriendAIConfig(TelegramBotConfig):
     bot_token: str = Field(
         description="Your telegram bot token.\nLearn how to create one here: "
-                    "https://github.com/EniasCailliau/GirlfriendGPT/blob/main/docs/register-telegram-bot.md")
+        "https://github.com/EniasCailliau/GirlfriendGPT/blob/main/docs/register-telegram-bot.md"
+    )
     elevenlabs_api_key: str = Field(
         default="", description="Optional API KEY for ElevenLabs Voice Bot"
     )
@@ -42,10 +41,6 @@ class GirlFriendAIConfig(TelegramBotConfig):
     )
     chat_ids: str = Field(
         default="", description="Comma separated list of whitelisted chat_id's"
-    )
-
-    did_api_key: str = Field(
-        default="", description="API KEY for D-ID"
     )
 
 
@@ -119,9 +114,8 @@ class GirlfriendGPT(LangChainAgentBot, TelegramBot):
             # GenerateImageTool(self.client),
             # GenerateAlbumArtTool(self.client)
             # RemindMe(invoke_later=self.invoke_later, chat_id=chat_id),
-            SelfieTool(self.client),
+            # SelfieTool(self.client),
+            VideoMessageTool(self.client),
         ]
-        if self.config.did_api_key:
-            tools.append(VideoMessageTool(self.client, api_key=self.config.did_api_key))
 
         return tools

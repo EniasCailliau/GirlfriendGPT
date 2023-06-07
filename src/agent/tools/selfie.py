@@ -2,7 +2,7 @@
 import logging
 
 from langchain.agents import Tool
-from steamship import Steamship
+from steamship import Steamship, Block
 from steamship.base.error import SteamshipError
 
 NAME = "GenerateSelfie"
@@ -15,11 +15,7 @@ Output: the UUID of the generated selfie showing what you're doing or where you 
 
 PLUGIN_HANDLE = "stable-diffusion"
 
-NEGATIVE_PROMPT = (
-    "(bonnet), (hat), (beanie), cap, (((wide shot))), (cropped head), bad framing, "
-    "out of frame, deformed, cripple, old, fat, ugly, poor, missing arm, additional arms, "
-    "additional legs, additional head, additional face, dyed hair, black and white, grayscale"
-)
+NEGATIVE_PROMPT = " (nsfw:1.4),easynegative,(deformed, distorted,disfigured:1.3), poorly drawn, bad anatomy, wrong anatomy, extra limb, missing limb, (mutated hands and finger:1.4), disconnected limbs, mutation, mutated, ugly, disgusting, blurry, amputation"
 
 
 class SelfieTool(Tool):
@@ -43,20 +39,16 @@ class SelfieTool(Tool):
             plugin_handle=PLUGIN_HANDLE, config={"n": 1, "size": "768x768"}
         )
 
-        prompt = prompt + (
-            "professional portrait photograph of a gorgeous Norwegian girl with long wavy blonde hair, "
-            f"{prompt}"
-            "((sultry flirty look)), freckles, beautiful symmetrical face, cute natural makeup, "
-            "((standing outside in snowy city street)), "
-            "stunning modern urban upscale environment, ultra realistic, concept art, elegant, highly detailed, "
-            "intricate, sharp focus, depth of field, f/1. 8, 85mm, medium shot, mid shot, (centered image composition), "
-            "(professionally color graded), ((bright soft diffused light)), volumetric fog, "
-            "trending on instagram, trending on tumblr, hdr 4k, 8k"
-        )
+        prompt = "sfw, best quality, ultra high res, ultra-detailed face and eyes, detailed body, detailed clothes, kodak portra 400, (photorealistic:1. 4), pretty lady in the city, detailed background, (street in city:1. 2), (black shirt:1. 4), plaid skirt, (short blonde hair:1. 4), looking back, close mouth, blush, narrow waist, light green eyes, make-up <lora:aigirl:0. 6>, professional light, face focus, (light on the face)"
         task = image_generator.generate(
             text=prompt,
             append_output_to_file=True,
-            options={"negative_prompt": NEGATIVE_PROMPT},
+            options={
+                "negative_prompt": NEGATIVE_PROMPT,
+                "guidance_scale": 7,
+                "num_inference_steps": 40,
+                "scheduler": "K_EULER_ANCESTRAL",
+            },
         )
         task.wait()
         blocks = task.output.blocks
