@@ -39,7 +39,16 @@ class SelfieTool(Tool):
             plugin_handle=PLUGIN_HANDLE, config={"n": 1, "size": "768x768"}
         )
 
-        prompt = "sfw, best quality, ultra high res, ultra-detailed face and eyes, detailed body, detailed clothes, kodak portra 400, (photorealistic:1. 4), pretty lady in the city, detailed background, (street in city:1. 2), (black shirt:1. 4), plaid skirt, (short blonde hair:1. 4), looking back, close mouth, blush, narrow waist, light green eyes, make-up <lora:aigirl:0. 6>, professional light, face focus, (light on the face)"
+        prompt = prompt + (
+            "professional selfie of a gorgeous Norwegian girl with long wavy blonde hair, "
+            "((sultry flirty look)), freckles, beautiful symmetrical face, cute natural makeup, "
+            "woman((upper body selfie, happy)), masterpiece, best quality, ultra-detailed, solo, "
+            "outdoors, (night), mountains, nature, (stars, moon) cheerful, happy, backpack, "
+            "analog style (look at viewer:1.2) (skin texture) (film grain:1.3), (warm hue, warm tone)"
+            "intricate, sharp focus, depth of field, f/1. 8, 85mm, medium shot, mid shot, "
+            "(centered image composition), (professionally color graded)"
+            "trending on instagram, trending on tumblr, hdr 4k, 8k"
+        )
         task = image_generator.generate(
             text=prompt,
             append_output_to_file=True,
@@ -47,7 +56,6 @@ class SelfieTool(Tool):
                 "negative_prompt": NEGATIVE_PROMPT,
                 "guidance_scale": 7,
                 "num_inference_steps": 40,
-                "scheduler": "K_EULER_ANCESTRAL",
             },
         )
         task.wait()
