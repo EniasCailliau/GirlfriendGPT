@@ -1,36 +1,32 @@
-from .alix_earle import alix_earle
-from .angele import angele
-from .jack_dawson import jack_dawson
-from .jordan_belfort import jordan_belfort
-from .luna import luna
-from .makima import makima
-from .sacha import sacha
-from .sandra import sandra
+from pathlib import Path
+from typing import List, Dict, Optional
 
-__all__ = [
-    "sacha",
-    "luna",
-    "angele",
-    "makima",
-    "sandra",
-    "alix_earle",
-    "jack_dawson",
-    "jordan_belfort",
-    "get_personality",
-]
+from pydantic import BaseModel
+from urllib3.util import Url
+
+dir_path = Path(__file__).parent
+
+# Get a list of all Python files in the directory
+personality_files = dir_path.glob("*.json")
+
+
+class Personality(BaseModel):
+    name: str
+    byline: str
+    identity: List[str]
+    behavior: List[str]
+    profile_image: Optional[str]
+
+
+personalities: Dict[str, Personality] = {}
+for personality_file in personality_files:
+    personality = Personality.parse_file(personality_file)
+    personalities[personality_file.stem] = personality
 
 
 def get_personality(name: str):
     try:
-        return {
-            "Sacha": sacha,
-            "Luna": luna,
-            "Angèle": angele,
-            "Makima": makima,
-            "Sandra": sandra,
-            "Alix Earle": alix_earle,
-            "Jack Dawson": jack_dawson,
-            "Jordan Belfort": jordan_belfort,
-        }[name]
+        # personality_name = PersonalityName(name)
+        return personalities[name]
     except Exception:
-        raise Exception("The personality you selected does not exist!")
+        raise Exception(f"The personality you selected ({name}) does not exist!")

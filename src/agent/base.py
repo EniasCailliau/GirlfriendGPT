@@ -7,12 +7,24 @@ from typing import List, Optional
 from langchain.agents import AgentExecutor
 from langchain.tools import Tool
 from steamship import Block
+from steamship.data.tags.tag_constants import RoleTag
 from steamship.experimental.package_starters.telegram_bot import TelegramBot
 from steamship.invocable import post
 
 UUID_PATTERN = re.compile(
     r"([0-9A-Za-z]{8}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{12})"
 )
+
+MAX_FREE_MESSAGES = 10
+
+
+class ChatMessage(Block):
+    who: str = "bot"
+
+    def __init__(self, chat_id: str, **kwargs):
+        super().__init__(**kwargs)
+        self.set_chat_id(chat_id)
+        self.set_chat_role(RoleTag.AGENT)
 
 
 def is_uuid(uuid_to_test: str, version: int = 4) -> bool:
@@ -40,8 +52,7 @@ class LangChainAgentBot(TelegramBot):
         """Send a message to Telegram.
 
         Note: This is a private endpoint that requires authentication."""
-        message = Block(text=message)
-        message.set_chat_id(chat_id)  # TODO: chat_id part of __init__?
+        message = ChatMessage(text=message, chat_id=chat_id)
         self.telegram_transport.send([message], metadata={})
         return "ok"
 
@@ -55,36 +66,31 @@ class LangChainAgentBot(TelegramBot):
             },
         )
 
-    def create_response(self, incoming_message: Block) -> Optional[List[Block]]:
+    def create_response(self, incoming_message: Block) -> Optional[List[ChatMessage]]:
         """Use the LLM to prepare the next response by appending the user input to the file and then generating."""
         chat_id = incoming_message.chat_id
         if hasattr(self.config, "chat_ids") and self.config.chat_ids:
             if chat_id not in self.config.chat_ids.split(","):
                 if (
-                    hasattr(self, "get_memory")
-                    and len(self.get_memory(chat_id).buffer) > 10
+                        hasattr(self, "get_memory")
+                        and len(self.get_memory(chat_id).buffer) > MAX_FREE_MESSAGES
                 ):
-                    message_1 = Block(
-                        text="Thanks for trying out KarenGPT!",
-                    )
-                    message_1.set_chat_id(chat_id)
-
-                    message_2 = Block(
-                        text="Please deploy your own version GirlfriendGPT to continue chatting.",
-                    )
-                    message_2.set_chat_id(chat_id)
-
-                    message_3 = Block(
-                        text="Learn how on: https://github.com/EniasCailliau/GirlfriendGPT/",
-                    )
-                    message_3.set_chat_id(chat_id)
-                    return [message_1, message_2, message_3]
+                    return [
+                        ChatMessage(
+                            text="Thanks for trying out SachaGPT!", chat_id=chat_id
+                        ),
+                        ChatMessage(
+                            text="Please deploy your own version GirlfriendGPT to continue chatting.",
+                            chat_id=chat_id,
+                        ),
+                        ChatMessage(
+                            text="Learn how on: https://github.com/EniasCailliau/GirlfriendGPT/",
+                            chat_id=chat_id,
+                        ),
+                    ]
 
         if incoming_message.text == "/start":
-            message = Block(
-                text="New conversation started.",
-            )
-            message.set_chat_id(chat_id)
+            message = ChatMessage(text="New conversation started.", chat_id=chat_id)
             return [message]
 
         conversation = self.get_agent(
@@ -108,8 +114,8 @@ class LangChainAgentBot(TelegramBot):
         )
 
     def agent_output_to_chat_messages(
-        self, chat_id: str, response_messages: List[str]
-    ) -> List[Block]:
+            self, chat_id: str, response_messages: List[str]
+    ) -> List[ChatMessage]:
         """Transform the output of the Multi-Modal Agent into a list of ChatMessage objects.
 
         The response of a Multi-Modal Agent contains one or more:
@@ -121,19 +127,16 @@ class LangChainAgentBot(TelegramBot):
         ret = []
         for response in response_messages:
             if is_uuid(response):
-                message = Block.get(self.client, _id=response)
-                message.set_chat_id(chat_id)
-                message = message.set_public_data(True)
-                message.url = message.raw_data_url
-
+                block = Block.get(self.client, _id=response)
+                block.set_public_data(True)
+                message = ChatMessage(**block.dict(), client=self.client, chat_id=chat_id)
+                message.url = block.raw_data_url
+                message.set_chat_role(RoleTag.AGENT)
+                message.who = "bot"
             else:
-                message = Block(
-                    client=self.client,
+                message = ChatMessage(
                     text=response,
-                )
-                message.set_chat_id(
                     chat_id=chat_id,
                 )
-
             ret.append(message)
         return ret

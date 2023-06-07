@@ -1,11 +1,11 @@
 {
 	"type": "package",
-	"handle": "karen-gpt-bot",
-	"version": "1.0.0-rc.2",
+	"handle": "girlfriend-gpt-bot",
+	"version": "1.7.0",
 	"description": "",
 	"author": "",
 	"entrypoint": "Unused",
-	"public": false,
+	"public": true,
 	"plugin": null,
 	"build_config": {
 		"ignore": [
@@ -34,10 +34,15 @@
 			"description": "Comma separated list of whitelisted chat_id's",
 			"default": ""
 		},
-		"did_api_key": {
+		"personality": {
 			"type": "string",
-			"description": "API KEY for D-ID",
-			"default": ""
+			"description": "The personality you want to deploy. Pick one of the personalities listed here: https://github.com/EniasCailliau/GirlfriendGPT/tree/main/src/personalities",
+			"default": null
+		},
+		"use_gpt4": {
+			"type": "boolean",
+			"description": "If True, use GPT-4. Use GPT-3.5 if False. GPT-4 generates better responses at higher cost and latency.",
+			"default": true
 		}
 	},
 	"steamshipRegistry": {

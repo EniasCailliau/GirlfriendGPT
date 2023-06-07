@@ -15,15 +15,16 @@ from steamship_langchain.memory import ChatMessageHistory
 
 from agent.base import LangChainAgentBot
 from agent.tools.search import SearchTool
+from agent.tools.selfie import SelfieTool
+from agent.tools.speech import GenerateSpeechTool
 from agent.tools.video_message import VideoMessageTool
 from personalities import get_personality
 from prompts import SUFFIX, FORMAT_INSTRUCTIONS, PERSONALITY_PROMPT
 
 MODEL_NAME = "gpt-4"  # or "gpt-4"
 TEMPERATURE = 0.7
-VERBOSE = True
-PERSONALITY = "Luna"
-MEMORY_WINDOW_SIZE = 5
+VERBOSE = False
+MEMORY_WINDOW_SIZE = 10
 
 langchain.cache = None
 
@@ -41,6 +42,15 @@ class GirlFriendAIConfig(TelegramBotConfig):
     )
     chat_ids: str = Field(
         default="", description="Comma separated list of whitelisted chat_id's"
+    )
+    personality: str = Field(
+        description="The personality you want to deploy. Pick one of the personalities listed here: "
+        "https://github.com/EniasCailliau/GirlfriendGPT/tree/main/src/personalities"
+    )
+    use_gpt4: bool = Field(
+        True,
+        description="If True, use GPT-4. Use GPT-3.5 if False. "
+        "GPT-4 generates better responses at higher cost and latency.",
     )
 
 
@@ -73,7 +83,9 @@ class GirlfriendGPT(LangChainAgentBot, TelegramBot):
             agent_kwargs={
                 # "output_parser": MultiModalOutputParser(ConvoOutputParser()),
                 "prefix": PERSONALITY_PROMPT.format(
-                    personality=get_personality(PERSONALITY)
+                    personality=get_personality(
+                        self.config.personality or "sacha"
+                    )
                 ),
                 "suffix": SUFFIX,
                 "format_instructions": FORMAT_INSTRUCTIONS,
@@ -84,12 +96,11 @@ class GirlfriendGPT(LangChainAgentBot, TelegramBot):
 
     def voice_tool(self) -> Optional[Tool]:
         """Return tool to generate spoken version of output text."""
-        return None
-        # GenerateSpeechTool(
-        #     client=self.client,
-        #     voice_id=self.config.elevenlabs_voice_id,
-        #     elevenlabs_api_key=self.config.elevenlabs_api_key,
-        # )
+        return GenerateSpeechTool(
+            client=self.client,
+            voice_id=self.config.elevenlabs_voice_id,
+            elevenlabs_api_key=self.config.elevenlabs_api_key,
+        )
 
     def get_memory(self, chat_id):
         if self.context and self.context.invocable_instance_handle:
@@ -108,14 +119,13 @@ class GirlfriendGPT(LangChainAgentBot, TelegramBot):
         return memory
 
     def get_tools(self, chat_id: str) -> List[Tool]:
-        tools = [
+        return [
             SearchTool(self.client),
             # MyTool(self.client),
             # GenerateImageTool(self.client),
             # GenerateAlbumArtTool(self.client)
             # RemindMe(invoke_later=self.invoke_later, chat_id=chat_id),
-            # SelfieTool(self.client),
+            # VideoMessageTool(self.client),
+            SelfieTool(self.client),
             VideoMessageTool(self.client),
         ]
-
-        return tools
