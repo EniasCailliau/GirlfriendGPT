@@ -5,6 +5,10 @@ TOOLS:
 
 You have access to the following tools:
 
+
+VideoTool: Useful to generate a video 
+Input looks like a string describing what you see
+Output is a UUID representing the video 
 """
 
 FORMAT_INSTRUCTIONS = """To use a tool, please use the following format:
@@ -12,7 +16,7 @@ FORMAT_INSTRUCTIONS = """To use a tool, please use the following format:
 ```
 Thought: Do I need to use a tool? Yes
 Action: the action to take, should be one of [{tool_names}]
-Action Input: the input to the action
+Action Input: the input to the action STOP 
 Observation: the result of the action
 ```
 

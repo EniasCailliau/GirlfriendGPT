@@ -67,7 +67,7 @@ if __name__ == "__main__":
     with Steamship.temporary_workspace() as client:
         tool = VideoMessageTool(client=client)
         id = tool.run(
-            "You can now generate video's of your AI companion. Try it out now for free!"
+            "Unlike anything you experienced before"
         )
         b = Block.get(client=client, _id=id)
         b.set_public_data(True)
