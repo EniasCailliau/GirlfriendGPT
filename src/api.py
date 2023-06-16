@@ -21,7 +21,6 @@ from agent.tools.video_message import VideoMessageTool
 from personalities import get_personality
 from prompts import SUFFIX, FORMAT_INSTRUCTIONS, PERSONALITY_PROMPT
 
-MODEL_NAME = "gpt-4"  # or "gpt-4"
 TEMPERATURE = 0.7
 VERBOSE = False
 MEMORY_WINDOW_SIZE = 10
@@ -48,7 +47,7 @@ class GirlFriendAIConfig(TelegramBotConfig):
         "https://github.com/EniasCailliau/GirlfriendGPT/tree/main/src/personalities"
     )
     use_gpt4: bool = Field(
-        True,
+        False,
         description="If True, use GPT-4. Use GPT-3.5 if False. "
         "GPT-4 generates better responses at higher cost and latency.",
     )
@@ -59,6 +58,10 @@ class GirlfriendGPT(LangChainAgentBot, TelegramBot):
 
     config: GirlFriendAIConfig
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.model_name = "gpt-4" if self.config.use_gpt4 else "gpt-3.5-turbo"
+
     @classmethod
     def config_cls(cls) -> Type[Config]:
         """Return the Configuration class."""
@@ -67,7 +70,7 @@ class GirlfriendGPT(LangChainAgentBot, TelegramBot):
     def get_agent(self, chat_id: str) -> AgentExecutor:
         llm = OpenAIChat(
             client=self.client,
-            model_name=MODEL_NAME,
+            model_name=self.model_name,
             temperature=TEMPERATURE,
             verbose=VERBOSE,
         )

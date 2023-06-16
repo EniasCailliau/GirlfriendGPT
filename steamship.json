@@ -1,7 +1,7 @@
 {
 	"type": "package",
 	"handle": "girlfriend-gpt-bot",
-	"version": "1.7.0",
+	"version": "2.0.0",
 	"description": "",
 	"author": "",
 	"entrypoint": "Unused",
@@ -42,7 +42,7 @@
 		"use_gpt4": {
 			"type": "boolean",
 			"description": "If True, use GPT-4. Use GPT-3.5 if False. GPT-4 generates better responses at higher cost and latency.",
-			"default": true
+			"default": false
 		}
 	},
 	"steamshipRegistry": {
