@@ -66,9 +66,7 @@ class VideoMessageTool(Tool):
 if __name__ == "__main__":
     with Steamship.temporary_workspace() as client:
         tool = VideoMessageTool(client=client)
-        id = tool.run(
-            "Unlike anything you experienced before"
-        )
+        id = tool.run("Unlike anything you experienced before")
         b = Block.get(client=client, _id=id)
         b.set_public_data(True)
         print(b.raw_data_url)

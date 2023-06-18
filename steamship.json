@@ -1,7 +1,7 @@
 {
 	"type": "package",
 	"handle": "girlfriend-gpt-bot",
-	"version": "2.0.0",
+	"version": "2.1.0-rc.2",
 	"description": "",
 	"author": "",
 	"entrypoint": "Unused",
@@ -18,6 +18,11 @@
 			"type": "string",
 			"description": "Your telegram bot token.\nLearn how to create one here: https://github.com/EniasCailliau/GirlfriendGPT/blob/main/docs/register-telegram-bot.md",
 			"default": null
+		},
+		"api_base": {
+			"type": "string",
+			"description": "The root API for Telegram",
+			"default": "https://api.telegram.org/bot"
 		},
 		"elevenlabs_api_key": {
 			"type": "string",
