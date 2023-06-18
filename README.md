@@ -22,7 +22,7 @@ To run your companion locally:
 
 ```
 pip install -r requirements.txt
-python main.py 
+python src.api.py 
 ```
 
 To deploy your companion & connect it to Telegram:
