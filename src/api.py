@@ -35,7 +35,7 @@ langchain.cache = None
 class GirlFriendAIConfig(TelegramTransportConfig):
     bot_token: str = Field(
         description="Your telegram bot token.\nLearn how to create one here: "
-        "https://github.com/EniasCailliau/GirlfriendGPT/blob/main/docs/register-telegram-bot.md"
+                    "https://github.com/EniasCailliau/GirlfriendGPT/blob/main/docs/register-telegram-bot.md"
     )
     elevenlabs_api_key: str = Field(
         default="", description="Optional API KEY for ElevenLabs Voice Bot"
@@ -48,12 +48,12 @@ class GirlFriendAIConfig(TelegramTransportConfig):
     )
     personality: str = Field(
         description="The personality you want to deploy. Pick one of the personalities listed here: "
-        "https://github.com/EniasCailliau/GirlfriendGPT/tree/main/src/personalities"
+                    "https://github.com/EniasCailliau/GirlfriendGPT/tree/main/src/personalities"
     )
     use_gpt4: bool = Field(
         False,
         description="If True, use GPT-4. Use GPT-3.5 if False. "
-        "GPT-4 generates better responses at higher cost and latency.",
+                    "GPT-4 generates better responses at higher cost and latency.",
     )
 
 
@@ -61,6 +61,7 @@ class GirlfriendGPT(LangChainTelegramBot):
     """Deploy LangChain chatbots and connect them to Telegram."""
 
     config: GirlFriendAIConfig
+    USED_MIXIN_CLASSES = [TelegramTransport, SteamshipWidgetTransport]
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
