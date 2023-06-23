@@ -136,9 +136,12 @@ class LangChainTelegramBot(AgentService):
 
         def sync_emit(blocks: List[Block], meta: Metadata):
             nonlocal output
-            output += "\n".join(
-                [b.text if b.is_text() else f"({b.mime_type}: {b.id})" for b in blocks]
-            )
+            for block in blocks:
+                if not block.is_text():
+                    block.set_public_data(True)
+                    output += f"({block.mime_type}: {block.raw_data_url})\n"
+                else:
+                    output += f"{block.text}\n"
 
         context.emit_funcs.append(sync_emit)
         self.run_agent(None, context)  # Maybe I override this

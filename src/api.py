@@ -1,4 +1,5 @@
 """Scaffolding to host your LangChain Chatbot on Steamship and connect it to Telegram."""
+import logging
 from typing import List, Optional, Type
 
 import langchain
@@ -35,7 +36,7 @@ langchain.cache = None
 class GirlFriendAIConfig(TelegramTransportConfig):
     bot_token: str = Field(
         description="Your telegram bot token.\nLearn how to create one here: "
-                    "https://github.com/EniasCailliau/GirlfriendGPT/blob/main/docs/register-telegram-bot.md"
+        "https://github.com/EniasCailliau/GirlfriendGPT/blob/main/docs/register-telegram-bot.md"
     )
     elevenlabs_api_key: str = Field(
         default="", description="Optional API KEY for ElevenLabs Voice Bot"
@@ -48,12 +49,12 @@ class GirlFriendAIConfig(TelegramTransportConfig):
     )
     personality: str = Field(
         description="The personality you want to deploy. Pick one of the personalities listed here: "
-                    "https://github.com/EniasCailliau/GirlfriendGPT/tree/main/src/personalities"
+        "https://github.com/EniasCailliau/GirlfriendGPT/tree/main/src/personalities"
     )
     use_gpt4: bool = Field(
         False,
         description="If True, use GPT-4. Use GPT-3.5 if False. "
-                    "GPT-4 generates better responses at higher cost and latency.",
+        "GPT-4 generates better responses at higher cost and latency.",
     )
 
 
@@ -90,7 +91,7 @@ class GirlfriendGPT(LangChainTelegramBot):
             agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION,
             agent_kwargs={
                 "prefix": PERSONALITY_PROMPT.format(
-                    personality=get_personality(self.config.personality or "sacha")
+                    personality=get_personality(self.config.personality)
                 ),
                 "suffix": SUFFIX,
                 "format_instructions": FORMAT_INSTRUCTIONS,
@@ -130,6 +131,7 @@ class GirlfriendGPT(LangChainTelegramBot):
 
 
 if __name__ == "__main__":
+    logging.disable(logging.ERROR)
     AgentREPL(
         GirlfriendGPT,
         method="prompt",
