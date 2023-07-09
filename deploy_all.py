@@ -21,6 +21,8 @@ for name, personality in personalities.items():
         {
             "name": name.title(),
             "description": personality.byline,
+            "behavior": personality.behavior,
+            "identity": personality.identity,
             "profile_image": personality.profile_image,
             "chat_src": f"https://www.steamship.com/embed/chat?userHandle=enias&workspaceHandle={workspace}&instanceHandle={name}&ai_name={urllib.parse.quote(name.title())}"
         }
