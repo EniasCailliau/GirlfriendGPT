@@ -91,7 +91,7 @@ class GirlfriendGPT(LangChainTelegramBot):
             agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION,
             agent_kwargs={
                 "prefix": PERSONALITY_PROMPT.format(
-                    personality=get_personality(self.config.personality)
+                    personality=get_personality(self.config.personality).format()
                 ),
                 "suffix": SUFFIX,
                 "format_instructions": FORMAT_INSTRUCTIONS,

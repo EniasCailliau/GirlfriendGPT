@@ -17,6 +17,20 @@ class Personality(BaseModel):
     behavior: List[str]
     profile_image: Optional[str]
 
+    def format(self):
+        behavior_str = "\n".join(self.behavior)
+        identity_str = "\n".join(self.identity)
+        return f"""You are {self.name}, {self.byline}.
+
+Who you are:
+
+{identity_str}
+
+How you behave:
+
+{behavior_str}
+"""
+
 
 personalities: Dict[str, Personality] = {}
 for personality_file in personality_files:
