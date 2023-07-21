@@ -12,14 +12,8 @@ class VideoMessageTool(DIDVideoGeneratorTool):
     """
 
     name: str = "VideoMessageTool"
-    human_description: str = "Generate a video message a selfie of yourself."
-    agent_description = (
-        "Used to generate a video message of yourself saying a message. "
-        "Useful when you need to generate a video message answering a user's request. "
-        "Only use when explicitly asked for."
-        "Input: The message you want to say in a video."
-        "Output: The video message."
-    )
+    human_description: str = "Generate a video message of yourself saying a message. Provide a text prompt that sends your message"
+    agent_description: str = None
 
     def __init__(self, client: Steamship):
         super().__init__(

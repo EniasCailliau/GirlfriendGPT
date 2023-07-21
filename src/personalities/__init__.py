@@ -2,7 +2,6 @@ from pathlib import Path
 from typing import List, Dict, Optional
 
 from pydantic import BaseModel
-from urllib3.util import Url
 
 dir_path = Path(__file__).parent
 
@@ -38,7 +37,7 @@ for personality_file in personality_files:
     personalities[personality_file.stem] = personality
 
 
-def get_personality(name: str):
+def get_personality(name: str) -> Personality:
     try:
         # personality_name = PersonalityName(name)
         return personalities[name]

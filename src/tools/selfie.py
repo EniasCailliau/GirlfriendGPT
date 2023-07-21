@@ -31,13 +31,8 @@ class SelfieTool(StableDiffusionTool):
     """
 
     name: str = "SelfieTool"
-    human_description: str = "Generates a selfie of yourself."
-    agent_description = (
-        "Used to generate a selfies of yourself. "
-        "Useful when you need to generate a selfie showing what you're doing or where you are."
-        "Input: A detailed stable-diffusion prompt describing where you are and what's visible in your environment."
-        "Output: The selfie."
-    )
+    human_description: str = "Generates a selfie of yourself. Provide a text prompt that describes what you are doing"
+    agent_description: str = None
 
     def run(
         self, tool_input: List[Block], context: AgentContext, **kwargs
@@ -46,6 +41,9 @@ class SelfieTool(StableDiffusionTool):
             Block(text=PROMPT_TEMPLATE.format(description=block.text))
             for block in tool_input
         ]
+
+        if not modified_inputs:
+            modified_inputs = [Block(text=PROMPT_TEMPLATE.format(description="selfie"))]
 
         # Create the Stable Diffusion tool we want to wrap
         stable_diffusion_tool = StableDiffusionTool()

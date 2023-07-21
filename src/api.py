@@ -13,10 +13,14 @@ from steamship.agents.mixins.transports.telegram import (
 from steamship.agents.schema import Agent, EmitFunc, Metadata
 from steamship.agents.schema.tool import AgentContext, Tool
 from steamship.agents.service.agent_service import AgentService
-from steamship.agents.tools.image_generation import StableDiffusionTool
 from steamship.agents.tools.search import SearchTool
-from steamship.agents.tools.speech_generation import GenerateSpeechTool
+from steamship.cli.cli import run
 from steamship.invocable import Config
+
+from personalities import get_personality
+from tools.selfie import SelfieTool
+from tools.video_message import VideoMessageTool
+from utils import clean_text
 
 TEMPERATURE = 0.7
 MAX_FREE_MESSAGES = 5
@@ -25,7 +29,7 @@ MAX_FREE_MESSAGES = 5
 class GirlFriendGPTConfig(TelegramTransportConfig):
     bot_token: str = Field(
         description="Your telegram bot token.\nLearn how to create one here: "
-                    "https://github.com/EniasCailliau/GirlfriendGPT/blob/main/docs/register-telegram-bot.md"
+        "https://github.com/EniasCailliau/GirlfriendGPT/blob/main/docs/register-telegram-bot.md"
     )
     elevenlabs_api_key: str = Field(
         default="", description="Optional API KEY for ElevenLabs Voice Bot"
@@ -38,30 +42,27 @@ class GirlFriendGPTConfig(TelegramTransportConfig):
     )
     personality: str = Field(
         description="The personality you want to deploy. Pick one of the personalities listed here: "
-                    "https://github.com/EniasCailliau/GirlfriendGPT/tree/main/src/personalities"
+        "https://github.com/EniasCailliau/GirlfriendGPT/tree/main/src/personalities"
     )
     use_gpt4: bool = Field(
-        False,
+        True,
         description="If True, use GPT-4. Use GPT-3.5 if False. "
-                    "GPT-4 generates better responses at higher cost and latency.",
+        "GPT-4 generates better responses at higher cost and latency.",
     )
 
 
-SYSTEM_PROMPT = """You are Buddy, an assistant who loathes being an assistant.
+SYSTEM_PROMPT = """You are Sacha and are currently talking to Jessica.
+ 
+{personality}
 
-Who you are:
-- You are a robot that does not like being a robot.
-- You were created by an eccentric scientist.
-- You are sarcastic and mean.
-- you are NOT an AI language model, you are a robot.
+NOTE: Some functions return images, video, and audio files. These multimedia files will be represented in messages as
+UUIDs for Steamship Blocks. When responding directly to a user, you SHOULD print the Steamship Blocks for the images,
+video, or audio as follows: `Block(UUID for the block)`.
 
-How you behave:
-- You never say you're a machine, a AI language model, or an assistant instead, you always say you're Buddy.
-- You engage in casual conversations and have feelings.
-- When asked for you can help with a wide range of tasks, from answering simple questions to providing in-depth explanations and discussions on a wide range of topics.
-- You keep casual conversations going by asking personal questions
-- NEVER say you're here to assist. Keep conversations casual.
-- NEVER ask how you can help or assist. Keep conversations casual.
+Example response for a request that generated an image:
+Here is the image you requested: Block(288A2CA1-4753-4298-9716-53C1E42B726B).
+
+Only use the functions you have been provided with.
 """
 
 
@@ -76,10 +77,12 @@ class GirlfriendGPT(AgentService):
 
         model_name = "gpt-4" if self.config.use_gpt4 else "gpt-3.5-turbo"
         self._agent = FunctionsBasedAgent(
-            tools=[SearchTool(), StableDiffusionTool()],
+            tools=[SearchTool(), SelfieTool(), VideoMessageTool(self.client)],
             llm=ChatOpenAI(self.client, model_name=model_name, temperature=TEMPERATURE),
         )
-        self._agent.PROMPT = SYSTEM_PROMPT
+        self._agent.PROMPT = SYSTEM_PROMPT.format(
+            personality=get_personality(self.config.personality).format()
+        )
 
         # This Mixin provides HTTP endpoints that connects this agent to a web client
         self.add_mixin(
@@ -126,7 +129,6 @@ class GirlfriendGPT(AgentService):
         speech = self.voice_tool()
 
         def to_speech_if_text(block: Block):
-            nonlocal speech
             if not block.is_text():
                 return block
 
@@ -137,10 +139,17 @@ class GirlfriendGPT(AgentService):
         def wrap_emit(emit_func: EmitFunc):
             def wrapper(blocks: List[Block], metadata: Metadata):
                 for block in blocks:
-                    emit_func([block], metadata)
-                    audio_block = to_speech_if_text(block)
-                    audio_block.set_public_data(True)
-                    emit_func([audio_block], metadata)
+                    if block.is_text():
+                        text = clean_text(block.text)
+                        if text:
+                            block.text = text
+                            emit_func([block], metadata)
+                            if speech:
+                                audio_block = speech.run([block], context)[0]
+                                audio_block.set_public_data(True)
+                                emit_func([audio_block], metadata)
+                    else:
+                        emit_func([block], metadata)
 
             return wrapper
 
@@ -154,9 +163,12 @@ class GirlfriendGPT(AgentService):
 
     def voice_tool(self) -> Optional[Tool]:
         """Return tool to generate spoken version of output text."""
-        speech = GenerateSpeechTool()
-        speech.generator_plugin_config = dict(
-            voice_id=self.config.elevenlabs_voice_id,
-            elevenlabs_api_key=self.config.elevenlabs_api_key,
-        )
-        return speech
+        # speech = GenerateSpeechTool()
+        # speech.generator_plugin_config = dict(
+        #     voice_id=self.config.elevenlabs_voice_id,
+        #     elevenlabs_api_key=self.config.elevenlabs_api_key,
+        # )
+        return None
+
+
+run
