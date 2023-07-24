@@ -14,8 +14,9 @@ from steamship.agents.schema import Agent, EmitFunc, Metadata
 from steamship.agents.schema.tool import AgentContext, Tool
 from steamship.agents.service.agent_service import AgentService
 from steamship.agents.tools.search import SearchTool
-from steamship.cli.cli import run
+from steamship.agents.tools.speech_generation import GenerateSpeechTool
 from steamship.invocable import Config
+from steamship.invocable.mixins.indexer_pipeline_mixin import IndexerPipelineMixin
 
 from personalities import get_personality
 from tools.selfie import SelfieTool
@@ -29,7 +30,7 @@ MAX_FREE_MESSAGES = 5
 class GirlFriendGPTConfig(TelegramTransportConfig):
     bot_token: str = Field(
         description="Your telegram bot token.\nLearn how to create one here: "
-        "https://github.com/EniasCailliau/GirlfriendGPT/blob/main/docs/register-telegram-bot.md"
+                    "https://github.com/EniasCailliau/GirlfriendGPT/blob/main/docs/register-telegram-bot.md"
     )
     elevenlabs_api_key: str = Field(
         default="", description="Optional API KEY for ElevenLabs Voice Bot"
@@ -42,12 +43,12 @@ class GirlFriendGPTConfig(TelegramTransportConfig):
     )
     personality: str = Field(
         description="The personality you want to deploy. Pick one of the personalities listed here: "
-        "https://github.com/EniasCailliau/GirlfriendGPT/tree/main/src/personalities"
+                    "https://github.com/EniasCailliau/GirlfriendGPT/tree/main/src/personalities"
     )
     use_gpt4: bool = Field(
         True,
         description="If True, use GPT-4. Use GPT-3.5 if False. "
-        "GPT-4 generates better responses at higher cost and latency.",
+                    "GPT-4 generates better responses at higher cost and latency.",
     )
 
 
@@ -70,7 +71,7 @@ class GirlfriendGPT(AgentService):
     """Deploy companions and connect them to Telegram."""
 
     config: GirlFriendGPTConfig
-    USED_MIXIN_CLASSES = [TelegramTransport, SteamshipWidgetTransport]
+    USED_MIXIN_CLASSES = [TelegramTransport, SteamshipWidgetTransport, IndexerPipelineMixin]
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -91,7 +92,7 @@ class GirlfriendGPT(AgentService):
             )
         )
 
-        # This Mixin provides HTTP endpoints that connects this agent to a web client
+        # This Mixin provides HTTP endpoints that connects this agent to Telegram
         self.add_mixin(
             TelegramTransport(
                 client=self.client,
@@ -100,6 +101,8 @@ class GirlfriendGPT(AgentService):
                 config=self.config,
             )
         )
+        # This Mixin provides HTTP endpoints that connects this agent to Telegram
+        self.add_mixin(IndexerPipelineMixin(client=self.client, invocable=self))
 
     def limit_exceeded(self, context: AgentContext):
         if hasattr(self.config, "chat_ids") and self.config.chat_ids:
@@ -127,13 +130,6 @@ class GirlfriendGPT(AgentService):
             return
 
         speech = self.voice_tool()
-
-        def to_speech_if_text(block: Block):
-            if not block.is_text():
-                return block
-
-            output_blocks = speech.run([block], context)
-            return output_blocks[0]
 
         # Note: EmitFunc is Callable[[List[Block], Metadata], None]
         def wrap_emit(emit_func: EmitFunc):
@@ -163,9 +159,9 @@ class GirlfriendGPT(AgentService):
 
     def voice_tool(self) -> Optional[Tool]:
         """Return tool to generate spoken version of output text."""
-        # speech = GenerateSpeechTool()
-        # speech.generator_plugin_config = dict(
-        #     voice_id=self.config.elevenlabs_voice_id,
-        #     elevenlabs_api_key=self.config.elevenlabs_api_key,
-        # )
-        return None
+        speech = GenerateSpeechTool()
+        speech.generator_plugin_config = dict(
+            voice_id=self.config.elevenlabs_voice_id,
+            elevenlabs_api_key=self.config.elevenlabs_api_key,
+        )
+        return speech
