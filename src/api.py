@@ -169,6 +169,3 @@ class GirlfriendGPT(AgentService):
         #     elevenlabs_api_key=self.config.elevenlabs_api_key,
         # )
         return None
-
-
-run
