@@ -18,10 +18,9 @@ from steamship.agents.tools.speech_generation import GenerateSpeechTool
 from steamship.invocable import Config
 from steamship.invocable.mixins.indexer_pipeline_mixin import IndexerPipelineMixin
 
-from personalities import get_personality
 from tools.selfie import SelfieTool
+from tools.utils import clean_text
 from tools.video_message import VideoMessageTool
-from utils import clean_text
 
 TEMPERATURE = 0.7
 MAX_FREE_MESSAGES = 5
@@ -41,9 +40,17 @@ class GirlFriendGPTConfig(TelegramTransportConfig):
     chat_ids: str = Field(
         default="", description="Comma separated list of whitelisted chat_id's"
     )
-    personality: str = Field(
-        description="The personality you want to deploy. Pick one of the personalities listed here: "
-                    "https://github.com/EniasCailliau/GirlfriendGPT/tree/main/src/personalities"
+    name: str = Field(
+        description="The name of your companion"
+    )
+    byline: str = Field(
+        description="The byline of your companion"
+    )
+    identity: str = Field(
+        description="The identity of your companion"
+    )
+    behavior: str = Field(
+        description="The behavior of your companion"
     )
     use_gpt4: bool = Field(
         True,
@@ -52,9 +59,15 @@ class GirlFriendGPTConfig(TelegramTransportConfig):
     )
 
 
-SYSTEM_PROMPT = """You are Sacha and are currently talking to Jessica.
- 
-{personality}
+SYSTEM_PROMPT = """You are {self.name}, {self.byline}.
+
+Who you are:
+
+{identity_str}
+
+How you behave:
+
+{behavior_str}
 
 NOTE: Some functions return images, video, and audio files. These multimedia files will be represented in messages as
 UUIDs for Steamship Blocks. When responding directly to a user, you SHOULD print the Steamship Blocks for the images,
@@ -82,7 +95,10 @@ class GirlfriendGPT(AgentService):
             llm=ChatOpenAI(self.client, model_name=model_name, temperature=TEMPERATURE),
         )
         self._agent.PROMPT = SYSTEM_PROMPT.format(
-            personality=get_personality(self.config.personality).format()
+            name=self.config.name,
+            byline=self.config.byline,
+            identity=self.config.identity,
+            behavior=self.config.behavior,
         )
 
         # This Mixin provides HTTP endpoints that connects this agent to a web client

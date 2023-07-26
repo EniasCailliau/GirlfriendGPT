@@ -1,7 +1,7 @@
 {
 	"type": "package",
 	"handle": "girlfriend-gpt-bot",
-	"version": "2.2.0",
+	"version": "2.2.1-rc.7",
 	"description": "",
 	"author": "",
 	"entrypoint": "Unused",
@@ -39,15 +39,30 @@
 			"description": "Comma separated list of whitelisted chat_id's",
 			"default": ""
 		},
-		"personality": {
+		"name": {
 			"type": "string",
-			"description": "The personality you want to deploy. Pick one of the personalities listed here: https://github.com/EniasCailliau/GirlfriendGPT/tree/main/src/personalities",
+			"description": "The name of your companion",
+			"default": null
+		},
+		"byline": {
+			"type": "string",
+			"description": "The byline of your companion",
+			"default": null
+		},
+		"identity": {
+			"type": "string",
+			"description": "The identity of your companion",
+			"default": null
+		},
+		"behavior": {
+			"type": "string",
+			"description": "The behavior of your companion",
 			"default": null
 		},
 		"use_gpt4": {
 			"type": "boolean",
 			"description": "If True, use GPT-4. Use GPT-3.5 if False. GPT-4 generates better responses at higher cost and latency.",
-			"default": false
+			"default": true
 		}
 	},
 	"steamshipRegistry": {
