@@ -22,14 +22,14 @@ To run your companion locally:
 
 ```
 pip install -r requirements.txt
-python src.api.py 
+ship serve local
 ```
 
 To deploy your companion & connect it to Telegram:
 
 ```
 pip install steamship
-ship deploy && ship use 
+ship serve remote
 ```
 
 You will need to fetch a Telegram key to connect your companion to Telegram. [This guide](/docs/register-telegram-bot.md) will show you how.
