@@ -1,7 +1,7 @@
 {
 	"type": "package",
 	"handle": "girlfriend-gpt-bot",
-	"version": "2.2.1-rc.7",
+	"version": "2.2.3-rc.2",
 	"description": "",
 	"author": "",
 	"entrypoint": "Unused",

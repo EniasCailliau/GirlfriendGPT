@@ -2,8 +2,10 @@ import time
 
 import pandas as pd
 import streamlit as st
+from pytube import YouTube
 from steamship import File
 
+from utils.data import index_youtube_video
 from utils.ux import sidebar, get_instance
 
 st.title("Manage your chatbot")
@@ -11,24 +13,36 @@ st.title("Manage your chatbot")
 sidebar()
 
 
+def _get_video_info(youtube_url: str):
+    yt = YouTube(youtube_url)
+    return {
+        "title": yt.title or "Unknown",
+        "description": yt.description or "Unknown",
+        "view_count": yt.views or 0,
+        "thumbnail_url": yt.thumbnail_url or "Unknown",
+        "publish_date": yt.publish_date.strftime("%Y-%m-%d %H:%M:%S")
+        if yt.publish_date
+        else "Unknown",
+        "length": yt.length or 0,
+        "author": yt.author or "Unknown",
+    }
+
+
 def load_and_show_videos(instance):
     files = File.query(instance.client, tag_filter_query='kind is "_type"').files
-    videos = []
-    for file in files:
-        for block in file.blocks:
-            tag_key_to_value = {tag.kind: tag.name for tag in block.tags}
-            videos.append(
+    documents = []
+    for document in files:
+        for block in document.blocks:
+            video_info = _get_video_info(document.metadata["source"])
+            documents.append(
                 {
-                    "Title": tag_key_to_value.get("title"),
-                    "source": "https://www.youtube.com/watch?v="
-                    + tag_key_to_value.get("source"),
-                    "thumbnail_url": tag_key_to_value.get("thumbnail_url"),
-                    "Status": [tag.name for tag in file.tags if tag.kind == "status"][
-                        0
-                    ],
+                    "Title": video_info.get("title"),
+                    "source": document.metadata["source"],
+                    "thumbnail_url": video_info.get("thumbnail_url"),
+                    "Status": document.metadata["status"],
                 }
             )
-    df = pd.DataFrame(videos)
+    df = pd.DataFrame(documents)
     table.dataframe(
         df,
         column_config={
@@ -38,20 +52,20 @@ def load_and_show_videos(instance):
         column_order=["thumbnail_url", "Title", "Status"],
     )
 
-    return videos
+    return documents
 
 
 instance = get_instance()
 refresh_bar = st.progress(0, text="Time till refresh")
 
 table = st.empty()
-videos = []
+documents = []
 i = 0
-#
-# if st.button("Add 10 more video's", type="primary"):
-#     videos = load_and_show_videos(instance)
-#     index_youtube_channel(st.session_state.channel_url, len(videos), 10)
-#     i = 0
+
+youtube_url = st.text_input("Youtube video url")
+if st.button("Add video"):
+    index_youtube_video(youtube_url)
+    print("done")
 
 while True:
     refresh_bar.progress(i % 20 / 20, text="Time till refresh")

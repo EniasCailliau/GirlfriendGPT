@@ -1,6 +1,6 @@
 import streamlit as st
 
-from tools.utils import sidebar, get_instance
+from utils.ux import sidebar, get_instance
 
 sidebar()
 st.title("Share your chatbot")

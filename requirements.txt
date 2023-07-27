@@ -1,3 +1,4 @@
 steamship@git+https://github.com/steamship-core/python-client@ec/review-mixins
 langchain==0.0.200
 scrapetube
+pytube

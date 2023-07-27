@@ -1,4 +1,5 @@
 """Scaffolding to host your LangChain Chatbot on Steamship and connect it to Telegram."""
+import re
 from typing import List, Optional, Type
 
 from pydantic import Field
@@ -19,7 +20,6 @@ from steamship.invocable import Config
 from steamship.invocable.mixins.indexer_pipeline_mixin import IndexerPipelineMixin
 
 from tools.selfie import SelfieTool
-from tools.utils import clean_text
 from tools.video_message import VideoMessageTool
 
 TEMPERATURE = 0.7
@@ -29,7 +29,7 @@ MAX_FREE_MESSAGES = 5
 class GirlFriendGPTConfig(TelegramTransportConfig):
     bot_token: str = Field(
         description="Your telegram bot token.\nLearn how to create one here: "
-                    "https://github.com/EniasCailliau/GirlfriendGPT/blob/main/docs/register-telegram-bot.md"
+        "https://github.com/EniasCailliau/GirlfriendGPT/blob/main/docs/register-telegram-bot.md"
     )
     elevenlabs_api_key: str = Field(
         default="", description="Optional API KEY for ElevenLabs Voice Bot"
@@ -40,34 +40,26 @@ class GirlFriendGPTConfig(TelegramTransportConfig):
     chat_ids: str = Field(
         default="", description="Comma separated list of whitelisted chat_id's"
     )
-    name: str = Field(
-        description="The name of your companion"
-    )
-    byline: str = Field(
-        description="The byline of your companion"
-    )
-    identity: str = Field(
-        description="The identity of your companion"
-    )
-    behavior: str = Field(
-        description="The behavior of your companion"
-    )
+    name: str = Field(description="The name of your companion")
+    byline: str = Field(description="The byline of your companion")
+    identity: str = Field(description="The identity of your companion")
+    behavior: str = Field(description="The behavior of your companion")
     use_gpt4: bool = Field(
         True,
         description="If True, use GPT-4. Use GPT-3.5 if False. "
-                    "GPT-4 generates better responses at higher cost and latency.",
+        "GPT-4 generates better responses at higher cost and latency.",
     )
 
 
-SYSTEM_PROMPT = """You are {self.name}, {self.byline}.
+SYSTEM_PROMPT = """You are {name}, {byline}.
 
 Who you are:
 
-{identity_str}
+{identity}
 
 How you behave:
 
-{behavior_str}
+{behavior}
 
 NOTE: Some functions return images, video, and audio files. These multimedia files will be represented in messages as
 UUIDs for Steamship Blocks. When responding directly to a user, you SHOULD print the Steamship Blocks for the images,
@@ -84,7 +76,11 @@ class GirlfriendGPT(AgentService):
     """Deploy companions and connect them to Telegram."""
 
     config: GirlFriendGPTConfig
-    USED_MIXIN_CLASSES = [TelegramTransport, SteamshipWidgetTransport, IndexerPipelineMixin]
+    USED_MIXIN_CLASSES = [
+        TelegramTransport,
+        SteamshipWidgetTransport,
+        IndexerPipelineMixin,
+    ]
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -152,13 +148,14 @@ class GirlfriendGPT(AgentService):
             def wrapper(blocks: List[Block], metadata: Metadata):
                 for block in blocks:
                     if block.is_text():
-                        text = clean_text(block.text)
+                        text = re.sub(r"^\W+", "", block.text.strip())
                         if text:
                             block.text = text
                             emit_func([block], metadata)
                             if speech:
                                 audio_block = speech.run([block], context)[0]
                                 audio_block.set_public_data(True)
+                                audio_block.url = audio_block.raw_data_url
                                 emit_func([audio_block], metadata)
                     else:
                         emit_func([block], metadata)
