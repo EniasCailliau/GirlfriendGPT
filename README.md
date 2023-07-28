@@ -1,13 +1,15 @@
 # GirlfriendGPT - Your personal AI companion
 
-Welcome to the GirlfriendGPT repository. This is a starter project to help you build your personalized AI companion with a unique personality, voice, and even SELFIES!
+This is a starter project to help you build your personalized AI companion with a unique personality, voice, and even SELFIES!
+
+## Deprication warning. 
+
+This repository is no longer actively maintained. 
 
 ## Demo
 Click the image below for a demo:
 
 [![Demo Video](http://img.youtube.com/vi/LiN3D1QZGQw/0.jpg)](http://www.youtube.com/watch?v=LiN3D1QZGQw "Video Title")
-
-## Subscribe to updates here: https://
 
 ## Features
 

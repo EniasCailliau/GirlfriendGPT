@@ -29,19 +29,20 @@ def _get_video_info(youtube_url: str):
 
 
 def load_and_show_videos(instance):
-    files = File.query(instance.client, tag_filter_query='kind is "_type"').files
+    files = File.query(instance.client, tag_filter_query='kind is "source" and samefile {kind is "status"}').files
     documents = []
     for document in files:
-        for block in document.blocks:
-            video_info = _get_video_info(document.metadata["source"])
-            documents.append(
-                {
-                    "Title": video_info.get("title"),
-                    "source": document.metadata["source"],
-                    "thumbnail_url": video_info.get("thumbnail_url"),
-                    "Status": document.metadata["status"],
-                }
-            )
+        source_tag = [tag for tag in document.tags if tag.kind == "source"][0].name
+        status_tag = [tag for tag in document.tags if tag.kind == "status"][0].name
+        video_info = _get_video_info(source_tag)
+        documents.append(
+            {
+                "Title": video_info.get("title"),
+                "source": source_tag,
+                "thumbnail_url": video_info.get("thumbnail_url"),
+                "Status": status_tag,
+            }
+        )
     df = pd.DataFrame(documents)
     table.dataframe(
         df,
@@ -65,7 +66,6 @@ i = 0
 youtube_url = st.text_input("Youtube video url")
 if st.button("Add video"):
     index_youtube_video(youtube_url)
-    print("done")
 
 while True:
     refresh_bar.progress(i % 20 / 20, text="Time till refresh")

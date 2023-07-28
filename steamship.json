@@ -1,7 +1,7 @@
 {
 	"type": "package",
 	"handle": "girlfriend-gpt-bot",
-	"version": "2.2.3-rc.2",
+	"version": "2.2.3-rc.3",
 	"description": "",
 	"author": "",
 	"entrypoint": "Unused",
@@ -16,8 +16,8 @@
 	"configTemplate": {
 		"bot_token": {
 			"type": "string",
-			"description": "Your telegram bot token.\nLearn how to create one here: https://github.com/EniasCailliau/GirlfriendGPT/blob/main/docs/register-telegram-bot.md",
-			"default": null
+			"description": "The secret token for your Telegram bot",
+			"default": ""
 		},
 		"api_base": {
 			"type": "string",

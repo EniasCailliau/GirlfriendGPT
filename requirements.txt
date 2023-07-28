@@ -1,4 +1,4 @@
-steamship@git+https://github.com/steamship-core/python-client@ec/review-mixins
+steamship@git+https://github.com/steamship-core/python-client@ec/fix-youtube-import
 langchain==0.0.200
 scrapetube
 pytube

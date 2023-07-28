@@ -12,9 +12,10 @@ from steamship import PackageInstance
 
 
 def add_resource(invocation_url: str, api_key: str, url: str):
+
     response = requests.post(
-        f"{invocation_url}add",
-        json={"file_type": "YOUTUBE", "content": url},
+        f"{invocation_url}index_url",
+        json={"url": url},
         headers={"Authorization": f"bearer {api_key}"},
     )
     return response.text
@@ -51,11 +52,9 @@ def index_youtube_channel(
 
 
 def index_youtube_video(youtube_url: str):
-    print("here")
     instance: PackageInstance = st.session_state.instance
-    print(instance.invocation_url)
     data = add_resource(
-        instance.invocation_url, str(instance.client.config.api_key), youtube_url
+        instance.invocation_url, instance.client.config.api_key.get_secret_value(), youtube_url
     )
 
     if "added" in data.lower():
@@ -67,7 +66,6 @@ def index_youtube_video(youtube_url: str):
 COMPANION_DIR = (
     Path(__file__) / ".." / ".." / ".." / "src" / "personalities"
 ).resolve()
-print(COMPANION_DIR)
 
 
 def get_companions():

@@ -28,7 +28,6 @@ if not st.session_state.get("instance"):
         "Templates (Optional)", options=["<none>", *get_companions()]
     )
     if companion_template != "<none>":
-        print(companion_template)
         companion = get_companion_attributes(companion_template.lower())
     else:
         companion = {}
@@ -110,7 +109,6 @@ else:
         if msg["role"] == "assistant":
             with st.chat_message(msg["role"], avatar=companion_img):
                 for response in [msg["content"]] if isinstance(msg["content"], str) else msg["content"]:
-                    print("message", msg["content"], response)
                     show_response(response)
         else:
             st.chat_message(msg["role"]).write(msg["content"])
