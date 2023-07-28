@@ -8,7 +8,7 @@ sys.path.append(str((Path(__file__) / "..").resolve()))
 st.set_page_config(page_title="🎥->🤗 Youtube to Companion")
 from utils.data import get_companions, get_companion_attributes, add_resource
 from utils.utils import get_instance, to_snake
-from utils.ux import sidebar, get_api_key
+from utils.ux import sidebar, get_api_key, show_response
 
 # Start page
 st.title("🎥->🤗 Youtube to Companion")
@@ -102,13 +102,16 @@ else:
 
     if "messages" not in st.session_state:
         st.session_state["messages"] = [
-            {"role": "assistant", "content": st.session_state.companion_first_message}
+            {"role": "assistant", "content": st.session_state.companion_first_message or "Hi ☺️"}
         ]
 
     companion_img = st.session_state.get("companion_profile_img")
     for msg in st.session_state.messages:
         if msg["role"] == "assistant":
-            st.chat_message(msg["role"], avatar=companion_img).write(msg["content"])
+            with st.chat_message(msg["role"], avatar=companion_img):
+                for response in [msg["content"]] if isinstance(msg["content"], str) else msg["content"]:
+                    print("message", msg["content"], response)
+                    show_response(response)
         else:
             st.chat_message(msg["role"]).write(msg["content"])
 
@@ -120,10 +123,5 @@ else:
             with st.spinner("Thinking..."):
                 responses = instance.invoke("prompt", prompt=prompt)
             for response in responses:
-                print(response)
-                mime_type = response["mimeType"]
-                if mime_type is None:
-                    st.write(response["text"])
-                elif "audio" in mime_type:
-                    st.audio(response["url"])
-        st.session_state.messages.append({"role": "assistant", "content": response})
+                show_response(response)
+        st.session_state.messages.append({"role": "assistant", "content": responses})

@@ -9,7 +9,7 @@ def sidebar():
             value=st.session_state.get(
                 "steamship_api_key", "50373F8C-094F-492D-844D-477DB40C7359"
             )
-            or "",
+                  or "",
             type="password",
         )
         if api_key:
@@ -59,3 +59,14 @@ def get_instance() -> PackageInstance:
         st.stop()
     else:
         return instance
+
+
+def show_response(response):
+    if isinstance(response, str):
+        st.write(response)
+    else:
+        mime_type = response["mimeType"]
+        if mime_type is None:
+            st.write(response["text"])
+        elif "audio" in mime_type:
+            st.audio(response["url"])
