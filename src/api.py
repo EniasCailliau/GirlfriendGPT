@@ -1,4 +1,3 @@
-"""Scaffolding to host your LangChain Chatbot on Steamship and connect it to Telegram."""
 import re
 from typing import List, Optional, Type
 
@@ -27,10 +26,6 @@ MAX_FREE_MESSAGES = 5
 
 
 class GirlFriendGPTConfig(TelegramTransportConfig):
-    bot_token: str = Field(
-        description="Your telegram bot token.\nLearn how to create one here: "
-        "https://github.com/EniasCailliau/GirlfriendGPT/blob/main/docs/register-telegram-bot.md"
-    )
     elevenlabs_api_key: str = Field(
         default="", description="Optional API KEY for ElevenLabs Voice Bot"
     )
@@ -47,7 +42,7 @@ class GirlFriendGPTConfig(TelegramTransportConfig):
     use_gpt4: bool = Field(
         True,
         description="If True, use GPT-4. Use GPT-3.5 if False. "
-        "GPT-4 generates better responses at higher cost and latency.",
+                    "GPT-4 generates better responses at higher cost and latency.",
     )
 
 
@@ -116,31 +111,8 @@ class GirlfriendGPT(AgentService):
         # This Mixin provides HTTP endpoints that connects this agent to Telegram
         self.add_mixin(IndexerPipelineMixin(client=self.client, invocable=self))
 
-    def limit_exceeded(self, context: AgentContext):
-        if hasattr(self.config, "chat_ids") and self.config.chat_ids:
-            if len(context.chat_history.messages) / 2 > MAX_FREE_MESSAGES:
-
-                for func in context.emit_funcs:
-                    func(
-                        [
-                            Block(text="Thanks for trying out SachaGPT!"),
-                            Block(
-                                text="Please deploy your own version GirlfriendGPT to continue chatting."
-                            ),
-                            Block(
-                                text="Learn how on: https://github.com/EniasCailliau/GirlfriendGPT/"
-                            ),
-                        ],
-                        context.metadata,
-                    )
-                return True
-        return False
-
     def run_agent(self, agent: Agent, context: AgentContext):
         """Override run-agent to patch in audio generation as a finishing step for text output."""
-        if self.limit_exceeded(context):
-            return
-
         speech = self.voice_tool()
 
         # Note: EmitFunc is Callable[[List[Block], Metadata], None]
